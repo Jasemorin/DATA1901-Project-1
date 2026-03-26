@@ -12,3 +12,6 @@ report.html
 # OS files
 .DS_Store
 Thumbs.db
+
+/.quarto/
+**/*.quarto_ipynb
