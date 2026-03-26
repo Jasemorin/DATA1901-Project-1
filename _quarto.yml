@@ -1,0 +1,22 @@
+project:
+  type: default
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    embed-resources: true
+    code-fold: true
+    code-tools: true
+  pdf:
+    documentclass: article
+    toc: true
+    number-sections: true
+    colorlinks: true
+
+execute:
+  echo: true
+  warning: false
+  message: false
