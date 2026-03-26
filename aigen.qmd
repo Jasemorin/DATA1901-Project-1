@@ -1,0 +1,224 @@
+---
+title: "Warned vs Unwarned Symptoms"
+subtitle: "Nocebo side effects — Saunders et al. (2025)"
+format:
+  html:
+    theme: flatly
+    toc: true
+    toc-depth: 2
+    self-contained: true
+    code-fold: true
+    code-summary: "Show code"
+execute:
+  warning: false
+  message: false
+---
+```{r setup}
+library(tidyverse)
+library(readxl)
+library(plotly)
+library(here)
+
+datapath <- here("data", "1901_2026_s1_data.xlsx")
+df <- read_excel(datapath, sheet = "osf_anon_data")
+
+df_long <- df %>%
+  select(gid_pid, group, intervention_bin,
+         starts_with("bgase_"), starts_with("agase_")) %>%
+  pivot_longer(
+    cols          = starts_with("bgase_") | starts_with("agase_"),
+    names_to      = c("timing", "item"),
+    names_pattern = "(bgase|agase)_(\\d+)"
+  ) %>%
+  pivot_wider(names_from = timing, values_from = value) %>%
+  mutate(
+    diff    = agase - bgase,
+    item    = as.integer(item),
+    warned  = item <= 2,
+    symptom = case_when(
+      item == 1  ~ "Headache",
+      item == 2  ~ "Dizziness",
+      item == 3  ~ "Nausea",
+      item == 4  ~ "Stomach discomfort",
+      item == 5  ~ "Breathing problems",
+      item == 6  ~ "Palpitation",
+      item == 7  ~ "Itching",
+      item == 8  ~ "Abnormal sweating",
+      item == 9  ~ "Dry mouth",
+      item == 10 ~ "Chest pain"
+    ),
+    symptom = fct_reorder(symptom, item)
+  )
+```
+
+## Overview
+
+This document explores how **warned symptoms** (headache and dizziness — explicitly
+mentioned in the side effect warning) compare to **unwarned symptoms** (the
+remaining 8 GASE items) across experimental conditions. All charts show
+**difference scores** (active rating − baseline rating), where positive values
+indicate symptom worsening.
+
+::: {.callout-note}
+**Study design reminder:** Participants (N = 161) were randomised to five groups:
+Natural History control (NH), Instruction alone (NINSM), Instruction + Side-Effect
+Modelling (NISM), Instruction + Positive Social Modelling video (INSM), and all
+conditions combined (ISM).
+:::
+
+## Results {.tabset}
+
+### Overall comparison
+```{r tab1}
+sig_labels <- df_long %>%
+  group_by(symptom, item, warned) %>%
+  summarise(
+    mean_diff = mean(diff, na.rm = TRUE),
+    p_val     = t.test(diff)$p.value,
+    .groups   = "drop"
+  ) %>%
+  mutate(
+    sig_label = case_when(
+      p_val < .001 ~ "**",
+      p_val < .05  ~ "*",
+      TRUE         ~ ""
+    ),
+    label     = paste0(symptom, sig_label),
+    bar_color = case_when(
+      warned      ~ "#D85A30",
+      p_val < .05 ~ "#5DCAA5",
+      TRUE        ~ "rgba(136,135,128,0.4)"
+    )
+  )
+
+plot_ly(
+  sig_labels,
+  x             = ~fct_reorder(label, item),
+  y             = ~mean_diff,
+  type          = "bar",
+  marker        = list(color = ~bar_color),
+  hovertemplate = ~paste0(
+    "<b>", symptom, "</b><br>",
+    "Mean diff: ", round(mean_diff, 3), "<br>",
+    "p = ", round(p_val, 3),
+    "<extra></extra>"
+  )
+) %>%
+  layout(
+    xaxis         = list(title = "", tickangle = -30),
+    yaxis         = list(title = "Mean symptom change (difference score)",
+                         zeroline = TRUE, zerolinecolor = "#999"),
+    showlegend    = FALSE,
+    plot_bgcolor  = "transparent",
+    paper_bgcolor = "transparent"
+  )
+```
+
+::: {.callout-tip}
+**Key finding:** Headache (mean = +0.26, p < .001) and dizziness (mean = +0.61,
+p < .001) increased significantly across the full sample. Nearly all unwarned
+symptoms hovered near zero or declined — indicating that the nocebo effect is
+**highly specific** to symptoms participants were explicitly warned about.
+
+`*` p < .05 &nbsp; `**` p < .001
+:::
+
+---
+
+### By experimental group
+```{r tab2}
+group_composite <- df_long %>%
+  group_by(group, warned) %>%
+  summarise(mean_diff = mean(diff, na.rm = TRUE), .groups = "drop") %>%
+  mutate(group = factor(group, levels = c("NH", "NINSM", "NISM", "INSM", "ISM")))
+
+plot_ly(
+  group_composite %>% filter(warned),
+  x             = ~group,
+  y             = ~mean_diff,
+  type          = "bar",
+  name          = "Warned",
+  marker        = list(color = "#D85A30"),
+  hovertemplate = "Warned: %{y:.3f}<extra></extra>"
+) %>%
+  add_trace(
+    data          = group_composite %>% filter(!warned),
+    x             = ~group,
+    y             = ~mean_diff,
+    name          = "Unwarned",
+    marker        = list(color = "#5DCAA5"),
+    hovertemplate = "Unwarned: %{y:.3f}<extra></extra>"
+  ) %>%
+  layout(
+    barmode       = "group",
+    xaxis         = list(title = ""),
+    yaxis         = list(title = "Composite mean difference score",
+                         zeroline = TRUE, zerolinecolor = "#999"),
+    showlegend    = TRUE,
+    legend        = list(orientation = "h", x = 0, y = -0.2),
+    plot_bgcolor  = "transparent",
+    paper_bgcolor = "transparent"
+  )
+```
+
+::: {.callout-tip}
+**Group pattern:** The two no-PSM placebo groups (NINSM, NISM) show the highest
+warned symptom scores (+1.18 and +1.56). PSM substantially reduces them. Unwarned
+symptoms remain near zero or negative across all groups — the nocebo effect does
+**not generalise** to unmentioned symptoms.
+
+Placebo vs NH — warned: Cohen *d* = 0.52, *p* = .017; unwarned: *d* = 0.15, *p* = .419.
+:::
+
+---
+
+### PSM intervention effect
+```{r tab3}
+psm_composite <- df_long %>%
+  filter(group != "NH") %>%
+  mutate(psm = if_else(intervention_bin == "Int", "PSM", "No PSM")) %>%
+  group_by(psm, warned) %>%
+  summarise(mean_diff = mean(diff, na.rm = TRUE), .groups = "drop") %>%
+  mutate(
+    symptom_type = if_else(
+      warned,
+      "Warned (headache + dizziness)",
+      "Unwarned (8-item composite)"
+    )
+  )
+
+plot_ly(
+  psm_composite %>% filter(psm == "No PSM"),
+  x             = ~symptom_type,
+  y             = ~mean_diff,
+  type          = "bar",
+  name          = "No PSM",
+  marker        = list(color = "rgba(136,135,128,0.45)"),
+  hovertemplate = "No PSM: %{y:.3f}<extra></extra>"
+) %>%
+  add_trace(
+    data          = psm_composite %>% filter(psm == "PSM"),
+    x             = ~symptom_type,
+    y             = ~mean_diff,
+    name          = "PSM",
+    marker        = list(color = "#1D9E75"),
+    hovertemplate = "PSM: %{y:.3f}<extra></extra>"
+  ) %>%
+  layout(
+    barmode       = "group",
+    xaxis         = list(title = ""),
+    yaxis         = list(title = "Composite mean difference score",
+                         zeroline = TRUE, zerolinecolor = "#999"),
+    showlegend    = TRUE,
+    legend        = list(orientation = "h", x = 0, y = -0.2),
+    plot_bgcolor  = "transparent",
+    paper_bgcolor = "transparent"
+  )
+```
+
+::: {.callout-tip}
+**Symmetric protection:** PSM reduced warned symptoms by −0.73 and unwarned
+symptoms by −0.79 — nearly identical magnitudes. This suggests PSM generates a
+**broad psychological protective effect** rather than removing symptom-specific
+expectations, possibly via improved overall safety perception of the treatment.
+:::

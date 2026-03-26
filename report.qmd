@@ -6,7 +6,7 @@ title: ""
 format:
   html:
     title-block-banner: true
-    ode-fold: true
+    code-fold: true
     embed-resources: true
     toc: true
     toc-location: left
@@ -23,31 +23,12 @@ This is effectively your "Executive Summary" with a concrete insight or action. 
 
 ## EDA (Max 200 words)
 
-```{r, warning = FALSE, message = FALSE}
-library(tidyverse)
-library(readxl)
-# read in your data here
-# df <- read_excel("data/1901_2026_s1_data.xlsx")
+```{}
 ```
 
-Discuss the data and consider
+## Research Question 1
 
-1.  Source
-2.  Structure
-3.  Limitations
-4.  Assumptions
-5.  Data cleaning
-
-## Research Question 1 (Max 350 words for both RQ1 + RQ2 combined)
-
-Type your research question evidence here.
-
-```{r}
-# you can enter your code to make your graphs in code chunks like this one
-# the output will be displayed in your html
-
-2 + 2
-
+```{}
 ```
 
 ## Research Question 2 (Linear Model)
