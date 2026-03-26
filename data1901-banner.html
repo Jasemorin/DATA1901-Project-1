@@ -1,0 +1,165 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+  .report-banner {
+    --blue:  #185FA5;
+    --warm:  #F1EFE8;
+    --muted: #5F5E5A;
+    --rule:  #D6D3CA;
+    --dark:  #1a1a1a;
+
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--warm);
+    border-top: 3px solid var(--blue);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    width: 100vw;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    margin-bottom: 2rem;
+    left: 50%;
+    right: 50%;
+    box-sizing: border-box;
+  }
+
+  .report-banner__inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 2.5rem 1.75rem;
+  }
+
+  /* diagonal grain */
+  .report-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      -55deg,
+      transparent, transparent 3px,
+      rgba(24, 95, 165, 0.028) 3px,
+      rgba(24, 95, 165, 0.028) 4px
+    );
+    pointer-events: none;
+  }
+
+  /* watermark — "P1" instead of Δ */
+  .report-banner::after {
+    content: 'P1';
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 7rem;
+    font-style: italic;
+    font-weight: 600;
+    color: rgba(24, 95, 165, 0.07);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .report-banner__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.6rem;
+  }
+
+  .report-banner__tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    background: rgba(24, 95, 165, 0.10);
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+
+  .report-banner__tag--unit {
+    background: rgba(24, 95, 165, 0.06);
+    color: var(--muted);
+  }
+
+  .report-banner__sem {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  .report-banner__title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.35rem, 3vw, 1.9rem);
+    font-weight: 600;
+    color: var(--dark);
+    line-height: 1.2;
+    margin: 0 0 0.3rem;
+  }
+
+  .report-banner__subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+    margin: 0 0 1.25rem;
+  }
+
+  .report-banner__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.5rem;
+    border-top: 1px solid var(--rule);
+    padding-top: 0.9rem;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .report-banner__meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .report-banner__meta-item strong {
+    color: var(--dark);
+    font-weight: 500;
+  }
+
+  .report-banner__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--blue);
+    opacity: 0.45;
+    display: inline-block;
+  }
+</style>
+
+<header class="report-banner">
+  <div class="report-banner__inner">
+  <div class="report-banner__eyebrow">
+    <span class="report-banner__tag">Project 1 Report</span>
+    <span class="report-banner__tag report-banner__tag--unit">DATA1901</span>
+    <span class="report-banner__sem">2026 Semester 1</span>
+  </div>
+
+  <h1 class="report-banner__title">Project Report</h1>
+  <p class="report-banner__subtitle">Replace this line with a one-sentence description of your research question.</p>
+
+  <div class="report-banner__meta">
+    <span class="report-banner__meta-item">
+      <span class="report-banner__dot"></span>
+      Unit <strong>DATA1901</strong>
+    </span>
+    <span class="report-banner__meta-item">
+      <span class="report-banner__dot"></span>
+      Assessment <strong>Project 1</strong>
+    </span>
+    <span class="report-banner__meta-item">
+      <span class="report-banner__dot"></span>
+      Semester <strong>S1 2026</strong>
+    </span>
+  </div>
+  </div>
+</header>

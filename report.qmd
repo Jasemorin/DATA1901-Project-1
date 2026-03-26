@@ -1,0 +1,69 @@
+---
+title: ""
+# subtitle: "One-sentence description of your research question"
+# author: "SIDs 560622278"
+# date: "S1 2026"
+format:
+  html:
+    title-block-banner: true
+    ode-fold: true
+    embed-resources: true
+    toc: true
+    toc-location: left
+    include-before-body: data1901-banner.html
+    css: style.css
+editor: visual
+---
+
+# Executive Summary (Max 50 words)
+
+This is effectively your "Executive Summary" with a concrete insight or action. Type your recommendation here.
+
+# Evidence
+
+## EDA (Max 200 words)
+
+```{r, warning = FALSE, message = FALSE}
+library(tidyverse)
+# read in your data here using read.csv
+```
+
+Discuss the data and consider
+
+1.  Source
+2.  Structure
+3.  Limitations
+4.  Assumptions
+5.  Data cleaning
+
+## Research Question 1 (Max 350 words for both RQ1 + RQ2 combined)
+
+Type your research question evidence here.
+
+```{r}
+# you can enter your code to make your graphs in code chunks like this one
+# the output will be displayed in your html
+
+2 + 2
+
+```
+
+## Research Question 2 (Linear Model)
+
+Type your research question evidence here. Include testing assumptions of the linear model (residual plot).
+
+## Articles (Max 50 words)
+
+Include any relevant literature to your analysis.
+
+# Acknowledgements
+
+The Acknowledgment section includes a list of group meetings (date and time and attendance), the contribution of each group member, and all resources used (e.g. url of stack overflow, url of Ed post, date and details of drop-in session with tutor).
+
+An AI usage statement including: the name and version of the AI tools, the publisher, the URL, a brief description of the context in which the tool was used. If no AI was used, this must be clearly stated.
+
+A short statement explaining how 1 of the Shared Values and 1 of the Ethical Principles has been adhered to.
+
+## AI usage
+
+AI tool Claude is used for
