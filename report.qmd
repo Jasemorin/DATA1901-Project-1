@@ -23,12 +23,40 @@ This is effectively your "Executive Summary" with a concrete insight or action. 
 
 ## EDA (Max 200 words)
 
-```{}
+```{r}
+library(tidyverse)
+library(here)
+library(fmsb)
+library(readxl)
+
+datapath <- here("data/1901_2026_s1_data.xlsx")
+df <- read_excel(datapath, sheet = "osf_anon_data")
+
+data <- data.frame(
+    Headache = df$bgase_1,
+    Dizziness = df$bgase_2,
+    Nausea = df$bgase_3,
+    `Stomach discomfort` = df$bgase_4,
+    `Breathing problems` = df$bgase_5,
+    Palpitation = df$bgase_6,
+    Itching = df$bgase_7,
+    `Abnormal sweating` = df$bgase_8,
+    `Dry mouth` = df$bgase_9,
+    `Chest pain` = df$bgase_10
+)
+
+data <- rbind(
+  rep(7, ncol(data)),
+  rep(1, ncol(data)),
+  data
+)
+
+radarchart(data)
 ```
 
 ## Research Question 1
 
-```{}
+```{r}
 ```
 
 ## Research Question 2 (Linear Model)
