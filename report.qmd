@@ -25,7 +25,9 @@ This is effectively your "Executive Summary" with a concrete insight or action. 
 
 ```{r, warning = FALSE, message = FALSE}
 library(tidyverse)
-# read in your data here using read.csv
+library(readxl)
+# read in your data here
+# df <- read_excel("data/1901_2026_s1_data.xlsx")
 ```
 
 Discuss the data and consider

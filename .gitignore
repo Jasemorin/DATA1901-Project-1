@@ -1,0 +1,14 @@
+# Quarto build artifacts
+_freeze/
+.quarto/
+report.html
+
+# R session files
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+
+# OS files
+.DS_Store
+Thumbs.db
