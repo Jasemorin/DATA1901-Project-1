@@ -127,6 +127,90 @@ ggplot(chart1_data, aes(x = fct_reorder(label, item), y = mean_diff,
   )
 ```
 
+```{r}
+library(tidyverse)
+library(here)
+library(fmsb)
+library(readxl)
+
+datapath <- here("data/1901_2026_s1_data.xlsx")
+df <- read_excel(datapath, sheet = "osf_anon_data")
+
+before <- c(
+  mean(df$bgase_1, na.rm = TRUE),
+  mean(df$bgase_2, na.rm = TRUE),
+  mean(df$bgase_3, na.rm = TRUE),
+  mean(df$bgase_4, na.rm = TRUE),
+  mean(df$bgase_5, na.rm = TRUE),
+  mean(df$bgase_6, na.rm = TRUE),
+  mean(df$bgase_7, na.rm = TRUE),
+  mean(df$bgase_8, na.rm = TRUE),
+  mean(df$bgase_9, na.rm = TRUE),
+  mean(df$bgase_10, na.rm = TRUE)
+)
+
+after <- c(
+  mean(df$agase_1, na.rm = TRUE),
+  mean(df$agase_2, na.rm = TRUE),
+  mean(df$agase_3, na.rm = TRUE),
+  mean(df$agase_4, na.rm = TRUE),
+  mean(df$agase_5, na.rm = TRUE),
+  mean(df$agase_6, na.rm = TRUE),
+  mean(df$agase_7, na.rm = TRUE),
+  mean(df$agase_8, na.rm = TRUE),
+  mean(df$agase_9, na.rm = TRUE),
+  mean(df$agase_10, na.rm = TRUE)
+)
+
+data <- data.frame(
+  Headache = c(before[1], after[1]),
+  Dizziness = c(before[2], after[2]),
+  Nausea = c(before[3], after[3]),
+  `Stomach discomfort` = c(before[4], after[4]),
+  `Breathing problems` = c(before[5], after[5]),
+  Palpitation = c(before[6], after[6]),
+  Itching = c(before[7], after[7]),
+  `Abnormal sweating` = c(before[8], after[8]),
+  `Dry mouth` = c(before[9], after[9]),
+  `Chest pain` = c(before[10], after[10])
+)
+
+data <- rbind(
+  rep(1.8, ncol(data)),
+  rep(1, ncol(data)),
+  data
+)
+
+radarchart(
+  data,
+  axistype = 1,
+  caxislabels = c("1.0", "1.2", "1.4", "1.6", "1.8"),
+  pcol = c("steelblue", "tomato"),
+  pfcol = c(scales::alpha("steelblue", 0.2), scales::alpha("tomato", 0.2)),
+  plwd = 1.5,
+  plty = c(1, 1),
+  cglcol = "grey70",
+  axislabcol = "grey30",
+  vlcex = 0.8
+)
+
+title(
+    main = "Mean symptom scores: Before vs After",
+    col.main = "black",
+    cex.main = 1,
+    line = 1.5
+)
+
+legend(
+  "topright",
+  legend = c("Before", "After"),
+  col = c("steelblue", "tomato"),
+  lty = 1,
+  lwd = 2,
+  bty = "n"
+)
+```
+
 ## Research Question 2 (Linear Model)
 
 Type your research question evidence here. Include testing assumptions of the linear model (residual plot).
