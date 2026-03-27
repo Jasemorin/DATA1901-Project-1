@@ -6,12 +6,17 @@ title: ""
 format:
   html:
     title-block-banner: true
-    ode-fold: true
+    code-fold: true
     embed-resources: true
     toc: true
-    toc-location: left
+    toc-location: right
+    toc-float: true
     include-before-body: data1901-banner.html
     css: style.css
+self-contained: true
+execute:
+  warning: false
+  message: false
 editor: visual
 ---
 
@@ -23,24 +28,62 @@ This is effectively your "Executive Summary" with a concrete insight or action. 
 
 ## EDA (Max 200 words)
 
-```{r, warning = FALSE, message = FALSE}
+```{r}
 library(tidyverse)
 library(readxl)
-# read in your data here
-# df <- read_excel("data/1901_2026_s1_data.xlsx")
+library(here)
+
+#-----Load data--------------------------------------------------------
+datapath <- here("data", "1901_2026_s1_data.xlsx")
+df <- read_excel(datapath, sheet = "osf_anon_data")
+
+#-----Tidy and compute pre/post change---------------------------------
+df_long <- df |>
+# filter data
+  select(
+    gid_pid, group, intervention_bin,
+    starts_with("bgase_"), starts_with("agase_")
+  ) |>
+# change data format from wide to long, so we have:  gid_pid | phase | item | value 
+  pivot_longer(
+    cols          = starts_with("bgase_") | starts_with("agase_"), # select cols
+    names_to      = c("phase", "item"), # separate into two new cols
+    names_pattern = "(bgase|agase)_(\\d+)" 
+  ) |>
+# change to wide, so we have:  gid_pid | item | bgase | agase 
+  pivot_wider(names_from = phase, values_from = value) |>
+#creating cols
+  mutate(
+    item = as.integer(item),       # change char "1" to int 1
+    diff = agase - bgase,          # calculate difference
+    warned = if_else(item <= 2, "Warned", "Non-warned"),          # labeling symptoms
+    warned = factor(warned, levels = c("Warned", "Non-warned")),  # order "Warned" before "Non-warned"
+    symptom = case_when(           # new col. symptom name 
+      item == 1  ~ "Headache",     # if item is "1", assign "Headache"
+      item == 2  ~ "Dizziness",
+      item == 3  ~ "Nausea",
+      item == 4  ~ "Stomach discomfort",
+      item == 5  ~ "Breathing problems",
+      item == 6  ~ "Palpitation",
+      item == 7  ~ "Itching",
+      item == 8  ~ "Abnormal sweating",
+      item == 9  ~ "Dry mouth",
+      item == 10 ~ "Chest pain"
+    ),
+    # forcats package (from tidyverse) handles factors
+    symptom = forcats::fct_reorder(symptom, item), # cast to factor and reorder according to number
+    # cast group col to factor and assign order
+    group = factor(group, levels = c("NH", "NINSM", "NISM", "INSM", "ISM"))
+  )
 ```
 
-Discuss the data and consider
+## Research Question 1
 
-1.  Source
-2.  Structure
-3.  Limitations
-4.  Assumptions
-5.  Data cleaning
+::: {.callout-note icon="false"}
+## Research Question 1
 
-## Research Question 1 (Max 350 words for both RQ1 + RQ2 combined)
-
-Type your research question evidence here.
+How do warned symptoms (headache/dizziness) compare to non-warned symptoms?
+:::
 
 ```{r}
 #| label: chart1
