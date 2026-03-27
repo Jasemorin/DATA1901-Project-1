@@ -10,7 +10,9 @@ DATA1901-Project-1/
 │   └── 1901_2026_s1_data.xlsx   # Course-provided dataset
 ├── .gitignore
 ├── README.md
+├── Project 1 Paper.pdf           # Assignment brief / project spec
 ├── _quarto.yml                   # Quarto project config
+├── aigen.qmd                     # AI-assisted exploratory analysis (Plotly)
 ├── data1901-banner.html          # Custom report banner
 ├── report.qmd                    # Main analysis report (edit this)
 └── style.css                     # Report stylesheet
@@ -21,11 +23,21 @@ DATA1901-Project-1/
 Install the required R packages, then render:
 
 ```r
-install.packages(c("tidyverse", "readxl"))
+install.packages(c("tidyverse", "readxl", "here", "fmsb", "scales", "plotly"))
 ```
+
+### Main report
 
 ```bash
 quarto render report.qmd
 ```
 
 The rendered `report.html` will open in your browser.
+
+### AI-assisted exploratory analysis
+
+```bash
+quarto render aigen.qmd
+```
+
+The rendered `aigen.html` will open in your browser.
