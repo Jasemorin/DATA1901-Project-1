@@ -43,11 +43,45 @@ Discuss the data and consider
 Type your research question evidence here.
 
 ```{r}
-# you can enter your code to make your graphs in code chunks like this one
-# the output will be displayed in your html
-
-2 + 2
-
+#| label: chart1
+#| fig-width: 9
+#| fig-height: 5
+chart1_data <- df_long |>
+  group_by(symptom, item, warned) |>
+  summarise(
+    mean_diff = mean(diff, na.rm = TRUE),
+    p_val     = t.test(diff)$p.value,
+    .groups   = "drop"
+  ) |>
+  mutate(
+    sig_label = case_when(
+      p_val < .001 ~ "**",
+      p_val < .05  ~ "*",
+      TRUE         ~ ""
+    ),
+    label = paste0(symptom, sig_label)
+  )
+ggplot(chart1_data, aes(x = fct_reorder(label, item), y = mean_diff,
+                         fill = warned)) +
+  geom_col(width = 0.7) +
+  geom_hline(yintercept = 0, colour = "grey40", linewidth = 0.4) +
+  scale_fill_manual(
+    values = c("TRUE" = "#D85A30", "FALSE" = "#5DCAA5"),
+    labels = c("TRUE" = "Warned", "FALSE" = "Unwarned")
+  ) +
+  labs(
+    title   = "Mean symptom change across all participants",
+    x       = NULL,
+    y       = "Mean difference score (active − baseline)",
+    fill    = NULL,
+    caption = "* p < .05  ** p < .001"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x     = element_text(angle = 35, hjust = 1),
+    legend.position = "top",
+    plot.caption    = element_text(colour = "grey50")
+  )
 ```
 
 ## Research Question 2 (Linear Model)
