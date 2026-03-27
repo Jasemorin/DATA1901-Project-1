@@ -89,41 +89,46 @@ How do warned symptoms (headache/dizziness) compare to non-warned symptoms?
 #| label: chart1
 #| fig-width: 9
 #| fig-height: 5
+# --- Summarise: one row per symptom with mean change and significance --------
 chart1_data <- df_long |>
-  group_by(symptom, item, warned) |>
+  group_by(symptom, item, warned) |>       # group by symptom, item number, and warned status
   summarise(
-    mean_diff = mean(diff, na.rm = TRUE),
-    p_val     = t.test(diff)$p.value,
-    .groups   = "drop"
+    mean_diff = mean(diff, na.rm = TRUE),  # average pre→post change, ignoring NAs
+    p_val     = t.test(diff)$p.value,      # one-sample t-test: does mean diff ≠ 0?
+    .groups   = "drop"                     # remove grouping after summarising
   ) |>
   mutate(
+    # convert p-value to a star label for the bar chart
     sig_label = case_when(
-      p_val < .001 ~ "**",
-      p_val < .05  ~ "*",
-      TRUE         ~ ""
+      p_val < .001 ~ "**",   # highly significant
+      p_val < .05  ~ "*",    # significant
+      TRUE         ~ ""      # not significant (else case)
     ),
-    label = paste0(symptom, sig_label)
+    label = paste0(symptom, sig_label)     # e.g. "Headache**"
   )
-ggplot(chart1_data, aes(x = fct_reorder(label, item), y = mean_diff,
+
+# --- Plot --------------------------------------------------------------------
+ggplot(chart1_data, aes(x = fct_reorder(label, item), # order bars by item number 1–10
+                         y = mean_diff,
                          fill = warned)) +
-  geom_col(width = 0.7) +
-  geom_hline(yintercept = 0, colour = "grey40", linewidth = 0.4) +
+  geom_col(width = 0.7) +                             # bar chart using actual y values
+  geom_hline(yintercept = 0, colour = "grey40", linewidth = 0.4) + # reference line at no change
   scale_fill_manual(
-    values = c("TRUE" = "#D85A30", "FALSE" = "#5DCAA5"),
-    labels = c("TRUE" = "Warned", "FALSE" = "Unwarned")
+    values = c("Warned" = "#D85A30", "Non-warned" = "#5DCAA5"),  # orange-red = warned, teal = non-warned
+    labels = c("Warned" = "Warned symptom", "Non-warned" = "Non-warned symptom")
   ) +
   labs(
     title   = "Mean symptom change across all participants",
-    x       = NULL,
+    x       = NULL,                                    # no x-axis title (labels are self-explanatory)
     y       = "Mean difference score (active − baseline)",
-    fill    = NULL,
-    caption = "* p < .05  ** p < .001"
+    fill    = NULL,                                    # no legend titlela
+    caption = "* p < .05  ** p < .001"                # significance key
   ) +
   theme_minimal(base_size = 12) +
   theme(
-    axis.text.x     = element_text(angle = 35, hjust = 1),
+    axis.text.x     = element_text(angle = 35, hjust = 1), # rotate labels to avoid overlap
     legend.position = "top",
-    plot.caption    = element_text(colour = "grey50")
+    plot.caption    = element_text(colour = "grey50")       # dim caption so it doesn't distract
   )
 ```
 
