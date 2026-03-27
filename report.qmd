@@ -203,7 +203,8 @@ title(
     main = "Mean symptom scores: Before vs After",
     col.main = "black",
     cex.main = 1,
-    line = 1.5
+    line = 1.5,
+    adj  = 0.5   # centre the title horizontally
 )
 
 legend(
