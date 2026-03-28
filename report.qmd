@@ -220,6 +220,19 @@ legend(
 
 Type your research question evidence here. Include testing assumptions of the linear model (residual plot).
 
+```{r}
+library(tidyverse)
+library(here)
+library(readxl)
+
+datapath <- here("data/1901_2026_s1_data.xlsx")
+df <- read_excel(datapath, sheet = "osf_anon_data")
+
+data <- data.frame(
+    
+)
+```
+
 ## Articles (Max 50 words)
 
 Include any relevant literature to your analysis.
