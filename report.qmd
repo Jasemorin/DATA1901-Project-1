@@ -200,7 +200,7 @@ radarchart(
 )
 
 title(
-    main = "Mean symptom scores: Before vs After",
+    main = "Mean symptom scores between each symptom: Before vs After",
     col.main = "black",
     cex.main = 1,
     line = 1.5
@@ -274,7 +274,7 @@ radarchart(
 )
 
 title(
-    main = "Mean symptom scores: Before vs After",
+    main = "Mean symptom scores between groups: Before vs After (Warned symptom)",
     col.main = "black",
     cex.main = 1,
     line = 1.5
@@ -344,7 +344,7 @@ radarchart(
 )
 
 title(
-    main = "Mean symptom scores: Before vs After",
+    main = "Mean symptom scores between groups: Before vs After (Non-warned symptom)",
     col.main = "black",
     cex.main = 1,
     line = 1.5
