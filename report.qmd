@@ -223,13 +223,140 @@ Type your research question evidence here. Include testing assumptions of the li
 ```{r}
 library(tidyverse)
 library(here)
+library(fmsb)
 library(readxl)
 
 datapath <- here("data/1901_2026_s1_data.xlsx")
 df <- read_excel(datapath, sheet = "osf_anon_data")
 
+before <- c(
+    mean(rowMeans(df[df$group == "NH", c("bgase_1", "bgase_2")],na.rm = TRUE),na.rm = TRUE),
+    mean(rowMeans(df[df$group == "NINSM", c("bgase_1", "bgase_2")],na.rm = TRUE),na.rm = TRUE),
+    mean(rowMeans(df[df$group == "NISM", c("bgase_1", "bgase_2")],na.rm = TRUE),na.rm = TRUE),
+    mean(rowMeans(df[df$group == "INSM", c("bgase_1", "bgase_2")],na.rm = TRUE),na.rm = TRUE),
+    mean(rowMeans(df[df$group == "ISM", c("bgase_1", "bgase_2")],na.rm = TRUE),na.rm = TRUE)
+)
+
+after <- c(
+  mean(rowMeans(df[df$group == "NH", c("agase_1", "agase_2")],na.rm = TRUE),na.rm = TRUE),
+    mean(rowMeans(df[df$group == "NINSM", c("agase_1", "agase_2")],na.rm = TRUE),na.rm = TRUE),
+    mean(rowMeans(df[df$group == "NISM", c("agase_1", "agase_2")],na.rm = TRUE),na.rm = TRUE),
+    mean(rowMeans(df[df$group == "INSM", c("agase_1", "agase_2")],na.rm = TRUE),na.rm = TRUE),
+    mean(rowMeans(df[df$group == "ISM", c("agase_1", "agase_2")],na.rm = TRUE),na.rm = TRUE)
+)
+
 data <- data.frame(
-    
+  NH = c(before[1], after[1]),
+  NINSM = c(before[2], after[2]),
+  NISM = c(before[3], after[3]),
+  INSM = c(before[4], after[4]),
+  ISM = c(before[5], after[5])
+)
+
+data <- rbind(
+  rep(2, ncol(data)),
+  rep(1, ncol(data)),
+  data
+)
+
+radarchart(
+  data,
+  seg = 5,
+  axistype = 1,
+  caxislabels = c("1.0", "1.2", "1.4", "1.6", "1.8", "2.0"),
+  pcol = c("steelblue", "tomato"),
+  pfcol = c(scales::alpha("steelblue", 0.2), scales::alpha("tomato", 0.2)),
+  plwd = 1.5,
+  plty = c(1, 1),
+  cglcol = "grey70",
+  axislabcol = "grey30",
+  vlcex = 0.8
+)
+
+title(
+    main = "Mean symptom scores: Before vs After",
+    col.main = "black",
+    cex.main = 1,
+    line = 1.5
+)
+
+legend(
+  "topright",
+  legend = c("Before", "After"),
+  col = c("steelblue", "tomato"),
+  lty = 1,
+  lwd = 2,
+  bty = "n"
+)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(fmsb)
+library(readxl)
+
+datapath <- here("data/1901_2026_s1_data.xlsx")
+df <- read_excel(datapath, sheet = "osf_anon_data")
+
+before <- c(
+  mean(rowMeans(df[df$group == "NH",    paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
+  mean(rowMeans(df[df$group == "NINSM", paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
+  mean(rowMeans(df[df$group == "NISM",  paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
+  mean(rowMeans(df[df$group == "INSM",  paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
+  mean(rowMeans(df[df$group == "ISM",   paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE)
+)
+
+after <- c(
+  mean(rowMeans(df[df$group == "NH",    paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
+  mean(rowMeans(df[df$group == "NINSM", paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
+  mean(rowMeans(df[df$group == "NISM",  paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
+  mean(rowMeans(df[df$group == "INSM",  paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
+  mean(rowMeans(df[df$group == "ISM",   paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE)
+)
+
+data <- data.frame(
+  NH = c(before[1], after[1]),
+  NINSM = c(before[2], after[2]),
+  NISM = c(before[3], after[3]),
+  INSM = c(before[4], after[4]),
+  ISM = c(before[5], after[5])
+)
+
+data <- rbind(
+  rep(2, ncol(data)),
+  rep(1, ncol(data)),
+  data
+)
+
+radarchart(
+  data,
+  seg = 5,
+  axistype = 1,
+  caxislabels = c("1.0", "1.2", "1.4", "1.6", "1.8", "2.0"),
+  pcol = c("steelblue", "tomato"),
+  pfcol = c(scales::alpha("steelblue", 0.2), scales::alpha("tomato", 0.2)),
+  plwd = 1.5,
+  plty = c(1, 1),
+  cglcol = "grey70",
+  axislabcol = "grey30",
+  vlcex = 0.8
+)
+
+title(
+    main = "Mean symptom scores: Before vs After",
+    col.main = "black",
+    cex.main = 1,
+    line = 1.5
+)
+
+legend(
+  "topright",
+  legend = c("Before", "After"),
+  col = c("steelblue", "tomato"),
+  lty = 1,
+  lwd = 2,
+  bty = "n"
 )
 ```
 
