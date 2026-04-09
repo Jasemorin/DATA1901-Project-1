@@ -20,14 +20,6 @@ execute:
 editor: visual
 ---
 
-# Executive Summary (Max 50 words)
-
-This is effectively your "Executive Summary" with a concrete insight or action. Type your recommendation here.
-
-# Evidence
-
-## EDA (Max 200 words)
-
 ```{r}
 library(tidyverse)
 library(readxl)
@@ -77,10 +69,42 @@ df_long <- df |>
   )
 ```
 
-## Research Question 1
+# Executive Summary (Max 50 words)
+
+In this research, we discovered a significant increase in the symptom score for warned symptoms, while a relatively stable score for unwarned symptoms. This supports the nocebo effect, providing evidence for the association between social modeling and the occurrence of side effects.
+
+# Evidence
+
+## EDA (Max 200 words)
+
+The data was obtained in the survey from the article “Positive social modeling attenuates nocebo side effects”. Our analysis examined the quantitative variable of self rated symptom score (1-7), and a combination of qualitative data on symptom types, different groups(ISM, NISM, NINSM, NH, INSM) either warned or non-warned.
+
+### Limitations
+
+The data was collected from mainly young psychological students leading to potential sampling bias and consent bias as these people may be more interested in psychology and therefore more compliant or attentive. Moreover, with the selection bias on removing unwanted volunteers (eg. people with allergy, dietary restrictions and high baseline restriction).
+
+### Leading to issues in
+
++----------------------------+-----------------------------------------------------------------------------------------------+
+| Reliability                | • Self reported symptoms would be inconsistent                                                |
+|                            |                                                                                               |
+|                            | • Absence of psychological measures can lead to variating results                             |
++----------------------------+-----------------------------------------------------------------------------------------------+
+| Accuracy                   | • Self-report bias → participants may over-report symptoms after being warned (nocebo effect) |
+|                            |                                                                                               |
+|                            | • Selection bias (healthy young students) → not representative of typical patients            |
++----------------------------+-----------------------------------------------------------------------------------------------+
+| Interpretation of the data | • Warnings increase reported symptoms                                                         |
++----------------------------+-----------------------------------------------------------------------------------------------+
+
+### Assumptions
+
+We assumed that the participants’ are similar at baseline due to randomisation and their self reported symptom scores are reliable and accurate, the variable of warning causes the increase in symptoms shown than unwarned group excluding impacts of other factors eg. personality, race… if there's an increase. Along with unmentioned symptoms unaffected by expectations.
+
+## Analysis
 
 ::: {.callout-note icon="false"}
-## Research Question 1
+## Research Question
 
 How do warned symptoms (headache/dizziness) compare to non-warned symptoms?
 :::
@@ -131,6 +155,8 @@ ggplot(chart1_data, aes(x = fct_reorder(label, item), # order bars by item numbe
     plot.caption    = element_text(colour = "grey50")       # dim caption so it doesn't distract
   )
 ```
+
+Figure 2 shows that there’s a disparity in the recognition of symptoms between the warned and unwarned group, with the warned group having a significant change in their self scoring of headache and dizziness. With the unwarned group having minimal change and a more wide spread of symptoms being recognised. This indicates that warnings directed participants’ attention toward those specific symptoms, showing selective rather than general increases in symptom recognition. The focused symptom amplification aligns with findings by Faasse and Petrie (2013), who found that side-effect warnings alone can heighten symptom experience through expectation (Faasse & Petrie, 2013).
 
 ```{r}
 library(tidyverse)
@@ -217,9 +243,7 @@ legend(
 )
 ```
 
-## Research Question 2 (Linear Model)
-
-Type your research question evidence here. Include testing assumptions of the linear model (residual plot).
+Figure 3 indicates the mean symptom scores of the groups before and being warned, having an overall increase in their self scorings. With NINSM and NISM having an increase of 0.4-0.6. Showcasing that exposure to others reporting side effects may have increased participants’ own symptom reporting. This reinforces other research which shows that social modelling intensifies nocebo responses by normalising and validating symptom awareness (Colloca & Miller, 2011).
 
 ```{r}
 library(tidyverse)
@@ -291,6 +315,8 @@ legend(
 )
 ```
 
+Figure 4 shows the mean symptoms of the unwarned group with slight decrease or no change in their symptom scores. The absence of change suggests that physical or environmental factors alone did not influence symptom reporting.
+
 ```{r}
 library(tidyverse)
 library(here)
@@ -361,13 +387,33 @@ legend(
 )
 ```
 
+Figure 5, showcases the mean symptom scores before and after the experiment, with a sharp rise of dizziness being observed along with a slight increase of headache. Also, having other unwarned symptoms remains constant. Hence, by figure 5 the warned participants have a specific increase in the reporting of those symptoms more than others.
+
+Overall, the consistent increase in warned but not non-warned symptoms demonstrates that expectations strongly influenced symptom experience. Participants were severely influenced by the specific symptoms they anticipated. The findings clearly demonstrate a nocebo effect, however, the study’s limitations may have impacted the results. The sample consisted mainly of psychology students, and data were self-reported, introducing possible bias and limiting generalisability. Despite this, the overall pattern strongly indicates that warning participants about side effects can meaningfully intensify perceived symptom severity.
+
 ## Articles (Max 50 words)
 
-Include any relevant literature to your analysis.
+### **References**
+
+-   Benedetti, F. (2013) *Placebo and the new physiology of the doctor-patient relationship*. *Physiological Reviews*, 93(3), pp. 1207–1246. doi:10.1152/physrev.00043.2012.
+
+-   Colloca, L. and Miller, F.G. (2011) ‘The nocebo effect and its relevance for clinical practice’, *Psychosomatic Medicine*, 73(7), pp. 598–603. doi:10.1097/PSY.0b013e3182294a50.
+
+-   Faasse, K. and Petrie, K.J. (2013) ‘The nocebo effect: patient expectations and medication side effects’, *Postgraduate Medical Journal*, 89(1055), pp. 540–546. doi:10.1136/postgradmedj-2012-131805.
 
 # Acknowledgements
 
-The Acknowledgment section includes a list of group meetings (date and time and attendance), the contribution of each group member, and all resources used (e.g. url of stack overflow, url of Ed post, date and details of drop-in session with tutor).
+### Contributions
+
+-   Victoria: Executive summary, research question
+
+-   Joyce: EDA, data analysis
+
+-   Jase: Coding graphs, Quarto report aesthetics
+
+-   Terry: Coding graphs
+
+-   Emily: Research question, connection with other articles
 
 An AI usage statement including: the name and version of the AI tools, the publisher, the URL, a brief description of the context in which the tool was used. If no AI was used, this must be clearly stated.
 
@@ -375,4 +421,4 @@ A short statement explaining how 1 of the Shared Values and 1 of the Ethical Pri
 
 ## AI usage
 
-AI tool Claude is used for
+Claude Opus 4.6, published by Anthropic (<https://claude.ai/>), was used to assist with coding.
