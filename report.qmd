@@ -450,7 +450,7 @@ Overall, the consistent increase in warned but not non-warned symptoms demonstra
 
 -   Terry: Coding graphs
 
--   Emily: Research question, connection with other articles
+-   Emily: Research question, connection with other articles, presentation slides
 
 An AI usage statement including: the name and version of the AI tools, the publisher, the URL, a brief description of the context in which the tool was used. If no AI was used, this must be clearly stated.
 
