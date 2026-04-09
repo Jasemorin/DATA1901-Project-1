@@ -2,6 +2,7 @@
 _freeze/
 .quarto/
 report.html
+aigen.html
 
 # R session files
 .Rhistory
@@ -13,7 +14,6 @@ report.html
 .DS_Store
 Thumbs.db
 
-/.quarto/
 **/*.quarto_ipynb
 aigen.html
 report_files/figure-html/chart1-1.png
