@@ -85,7 +85,7 @@ The data was obtained in the survey from the article “Positive social modeling
 ISM: Instruction & Side-effect Modelling\
 NISM: No Instruction & Side-effect Modelling\
 INSM: Instruction & No Side-effect Modelling\
-NINSM: Instruction & No Side-effect Modelling*
+NINSM: No Instruction & No Side-effect Modelling*
 
 ### Limitations
 
@@ -435,15 +435,15 @@ Overall, the consistent increase in warned but not non-warned symptoms demonstra
 
 ## Tools used
 
-+-------------------------------------------+-----------------------------+
-| **Communication**                         | Instagram                   |
-+-------------------------------------------+-----------------------------+
-| **Writing**                               | Notion, Google Docs         |
-+-------------------------------------------+-----------------------------+
-| **Editing**                               | Positron                    |
-+-------------------------------------------+-----------------------------+
-| **File management & version** **control** | OneDrive, GitHub            |
-+-------------------------------------------+-----------------------------+
++-------------------------------------------+----------------------------+
+| **Communication**                         | Instagram                  |
++-------------------------------------------+----------------------------+
+| **Writing**                               | Notion, Google Docs        |
++-------------------------------------------+----------------------------+
+| **Editing**                               | Positron                   |
++-------------------------------------------+----------------------------+
+| **File management & version** **control** | OneDrive, GitHub           |
++-------------------------------------------+----------------------------+
 
 ## Contributions
 
