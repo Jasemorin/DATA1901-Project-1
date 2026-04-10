@@ -211,7 +211,7 @@ legend("topright", legend = c("Before", "After"),
        col = c("steelblue", "tomato"), lty = 1, lwd = 2, bty = "n")
 ```
 
-Figure 2 indicates the mean symptom scores of the groups before and being warned, having an overall increase in their self scorings. With NINSM and NISM having an increase of 0.4-0.6. Showcasing that exposure to others reporting side effects may have increased participants’ own symptom reporting. This reinforces other research which shows that social modelling intensifies nocebo responses by normalising and validating symptom awareness (Colloca & Miller, 2011).
+Figure 2, showcases the mean symptom scores before and after the experiment, with a sharp rise of dizziness being observed along with a slight increase of headache. Also, having other unwarned symptoms remains constant. Hence, by figure 5 the warned participants have a specific increase in the reporting of those symptoms more than others.
 
 ### Mean Difference Score Between Groups (Warned vs Unwarned)
 
@@ -290,7 +290,7 @@ legend("topright", legend = c("Before", "After"),
        col = c("steelblue", "tomato"), lty = 1, lwd = 2, bty = "n")
 ```
 
-Figure 4 shows the mean symptoms of the unwarned group with slight decrease or no change in their symptom scores. The absence of change suggests that physical or environmental factors alone did not influence symptom reporting.
+Figure 4 indicates the mean symptom scores of the groups before and being warned, having an overall increase in their self scorings. With NINSM and NISM having an increase of 0.4-0.6. Showcasing that exposure to others reporting side effects may have increased participants’ own symptom reporting. This reinforces other research which shows that social modelling intensifies nocebo responses by normalising and validating symptom awareness (Colloca & Miller, 2011).
 
 ### Mean Score Between Groups by Unwarned Symptom (Before vs After)
 
@@ -331,7 +331,7 @@ legend("topright", legend = c("Before", "After"),
        col = c("steelblue", "tomato"), lty = 1, lwd = 2, bty = "n")
 ```
 
-Figure 5, showcases the mean symptom scores before and after the experiment, with a sharp rise of dizziness being observed along with a slight increase of headache. Also, having other unwarned symptoms remains constant. Hence, by figure 5 the warned participants have a specific increase in the reporting of those symptoms more than others.
+Figure 5 shows the mean symptoms of the unwarned group with slight decrease or no change in their symptom scores. The absence of change suggests that physical or environmental factors alone did not influence symptom reporting.
 
 Overall, the consistent increase in warned but not unwarned symptoms demonstrates that expectations strongly influenced symptom experience. Participants were severely influenced by the specific symptoms they anticipated. The findings clearly demonstrate a nocebo effect, however, the study’s limitations may have impacted the results. The sample consisted mainly of psychology students, and data were self-reported, introducing possible bias and limiting generalisability. Despite this, the overall pattern strongly indicates that warning participants about side effects can meaningfully intensify perceived symptom severity.
 
@@ -349,20 +349,20 @@ Overall, the consistent increase in warned but not unwarned symptoms demonstrate
 
 ## Tools used
 
-+-------------------------------------------+-----------------------------------------------+
-| **Communication**                         | Instagram                                     |
-+-------------------------------------------+-----------------------------------------------+
-| **Writing**                               | Notion, Google Docs                           |
-+-------------------------------------------+-----------------------------------------------+
-| **Editing**                               | Positron                                      |
-+-------------------------------------------+-----------------------------------------------+
-| **File management & version** **control** | OneDrive, GitHub                              |
-+-------------------------------------------+-----------------------------------------------+
++-------------------------------------------+------------------------------------+
+| **Communication**                         | Instagram                          |
++-------------------------------------------+------------------------------------+
+| **Writing**                               | Notion, Google Docs                |
++-------------------------------------------+------------------------------------+
+| **Editing**                               | Positron                           |
++-------------------------------------------+------------------------------------+
+| **File management & version** **control** | OneDrive, GitHub                   |
++-------------------------------------------+------------------------------------+
 
 ## Contributions
 
 +--------------+------------------------------------------------------------------------+
-| **Victoria** | Executive summary, research question                                   |
+| **Victoria** | Executive summary, research question, presentation script              |
 +--------------+------------------------------------------------------------------------+
 | **Joyce**    | EDA, data analysis                                                     |
 +--------------+------------------------------------------------------------------------+
