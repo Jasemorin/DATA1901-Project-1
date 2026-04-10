@@ -1,6 +1,6 @@
 ---
 title: ""
-# subtitle: "How do warned symptoms (headache/dizziness) compare to non-warned symptoms?"
+# subtitle: "How do warned symptoms (headache/dizziness) compare to unwarned symptoms?"
 # author: "SIDs 560622278"
 # date: "S1 2026"
 format:
@@ -21,12 +21,13 @@ editor: visual
 ---
 
 ```{r}
+#| label: setup
 library(tidyverse)
 library(readxl)
 library(here)
 library(fmsb)
 library(plotly)
-
+library(dplyr)
 
 #-----Load data--------------------------------------------------------
 datapath <- here("data", "1901_2026_s1_data.xlsx")
@@ -51,8 +52,8 @@ df_long <- df |>
   mutate(
     item = as.integer(item),       # change char "1" to int 1
     diff = agase - bgase,          # calculate difference
-    warned = if_else(item <= 2, "Warned", "Non-warned"),          # labeling symptoms
-    warned = factor(warned, levels = c("Warned", "Non-warned")),  # order "Warned" before "Non-warned"
+    warned = if_else(item <= 2, "Warned", "Unwarned"),          # labeling symptoms
+    warned = factor(warned, levels = c("Warned", "Unwarned")),  # order "Warned" before "Unwarned"
     symptom = case_when(           # new col. symptom name 
       item == 1  ~ "Headache",     # if item is "1", assign "Headache"
       item == 2  ~ "Dizziness",
@@ -80,7 +81,7 @@ In this research, we discovered a significant increase in the symptom score for 
 
 ## Exploratory Data Analysis (EDA)
 
-The data was obtained in the survey from the article “Positive social modeling attenuates nocebo side effects”. Our analysis examined the quantitative variable of self rated symptom score (1-7), and a combination of qualitative data on symptom types, different groups(NH, ISM, NISM, INSM, NINSM) either warned or non-warned.
+The data was obtained in the survey from the article “Positive social modeling attenuates nocebo side effects”. Our analysis examined the quantitative variable of self rated symptom score (1-7), and a combination of qualitative data on symptom types, different groups(NH, ISM, NISM, INSM, NINSM) either warned or unwarned.
 
 *NH: Natural History\
 ISM: Instruction & Side-effect Modelling\
@@ -115,11 +116,13 @@ We assumed that the participants’ are similar at baseline due to randomisation
 ::: {.callout-note icon="false"}
 ## Research Question
 
-How do warned symptoms (headache/dizziness) compare to non-warned symptoms?
+How do warned symptoms (headache/dizziness) compare to unwarned symptoms?
 :::
 
+### Mean Difference Score Between Symptoms (Warned vs Unwarned)
+
 ```{r}
-#| label: chart2
+#| label: fig1
 #| fig-width: 9
 #| fig-height: 6
 # --- Summarise: one row per symptom with mean change and significance --------
@@ -147,12 +150,12 @@ p2 <- ggplot(chart2_data, aes(x = fct_reorder(label, item), # order bars by item
   geom_col(width = 0.7) +                             # bar chart using actual y values
   geom_hline(yintercept = 0, colour = "grey40", linewidth = 0.4) + # reference line at no change
   scale_fill_manual(
-    values = c("Warned" = "#D85A30", "Non-warned" = "#5DCAA5"),  # orange-red = warned, teal = non-warned
-    labels = c("Warned" = "Warned symptom", "Non-warned" = "Non-warned symptom")
+    values = c("Warned" = "#D85A30", "Unwarned" = "#5DCAA5"),  # orange-red = warned, teal = unwarned
+    labels = c("Warned" = "Warned symptom", "Unwarned" = "Unwarned symptom")
   ) +
   labs(
     x       = NULL,                                    # no x-axis title (labels are self-explanatory)
-    y       = "Mean difference score",
+    y       = "Mean difference score (active − baseline)",
     fill    = NULL,                                    # no legend titlela
     caption = "* p < .05  ** p < .001"                # significance key
   ) +
@@ -168,90 +171,50 @@ ggplotly(p2)
 
 Figure 1 shows that there’s a disparity in the recognition of symptoms between the warned and unwarned group, with the warned group having a significant change in their self scoring of headache and dizziness. With the unwarned group having minimal change and a more wide spread of symptoms being recognised. This indicates that warnings directed participants’ attention toward those specific symptoms, showing selective rather than general increases in symptom recognition. The focused symptom amplification aligns with findings by Faasse and Petrie (2013), who found that side-effect warnings alone can heighten symptom experience through expectation (Faasse & Petrie, 2013).
 
+### Mean Symptom Score (Before vs After)
+
 ```{r}
-datapath <- here("data/1901_2026_s1_data.xlsx")   # build the file path to the Excel file
-df <- read_excel(datapath, sheet = "osf_anon_data")   # read the chosen sheet into a data frame
+#| label: fig2
 
-before <- c(   # create a vector of mean "before" scores for the 10 symptoms
-  mean(df$bgase_1, na.rm = TRUE),   # mean of symptom 1 before, ignore missing values
-  mean(df$bgase_2, na.rm = TRUE),   # mean of symptom 2 before
-  mean(df$bgase_3, na.rm = TRUE),   # mean of symptom 3 before
-  mean(df$bgase_4, na.rm = TRUE),   # mean of symptom 4 before
-  mean(df$bgase_5, na.rm = TRUE),   # mean of symptom 5 before
-  mean(df$bgase_6, na.rm = TRUE),   # mean of symptom 6 before
-  mean(df$bgase_7, na.rm = TRUE),   # mean of symptom 7 before
-  mean(df$bgase_8, na.rm = TRUE),   # mean of symptom 8 before
-  mean(df$bgase_9, na.rm = TRUE),   # mean of symptom 9 before
-  mean(df$bgase_10, na.rm = TRUE)   # mean of symptom 10 before
+symptom_names <- c("Headache", "Dizziness", "Nausea", "Stomach discomfort",
+                   "Breathing problems", "Palpitation", "Itching",
+                   "Abnormal sweating", "Dry mouth", "Chest pain")
+
+before <- colMeans(df[, paste0("bgase_", 1:10)], na.rm = TRUE)
+after  <- colMeans(df[, paste0("agase_", 1:10)], na.rm = TRUE)
+
+radar_data <- as.data.frame(rbind(before, after))
+names(radar_data) <- symptom_names
+
+radar_data <- rbind(
+  rep(1.8, ncol(radar_data)),  # max scale
+  rep(1,   ncol(radar_data)),  # min scale
+  radar_data
 )
 
-after <- c(   # create a vector of mean "after" scores for the 10 symptoms
-  mean(df$agase_1, na.rm = TRUE),   # mean of symptom 1 after, ignore missing values
-  mean(df$agase_2, na.rm = TRUE),   # mean of symptom 2 after
-  mean(df$agase_3, na.rm = TRUE),   # mean of symptom 3 after
-  mean(df$agase_4, na.rm = TRUE),   # mean of symptom 4 after
-  mean(df$agase_5, na.rm = TRUE),   # mean of symptom 5 after
-  mean(df$agase_6, na.rm = TRUE),   # mean of symptom 6 after
-  mean(df$agase_7, na.rm = TRUE),   # mean of symptom 7 after
-  mean(df$agase_8, na.rm = TRUE),   # mean of symptom 8 after
-  mean(df$agase_9, na.rm = TRUE),   # mean of symptom 9 after
-  mean(df$agase_10, na.rm = TRUE)   # mean of symptom 10 after
+radarchart(
+  radar_data,
+  axistype    = 1,
+  caxislabels = c("1.0", "1.2", "1.4", "1.6", "1.8"),
+  pcol        = c("steelblue", "tomato"),
+  pfcol       = c(scales::alpha("steelblue", 0.2), scales::alpha("tomato", 0.2)),
+  plwd        = 1.5,
+  plty        = c(1, 1),
+  cglcol      = "grey70",
+  axislabcol  = "grey30",
+  vlcex       = 0.8
 )
 
-data <- data.frame(   # make a data frame with one column per symptom
-  Headache = c(before[1], after[1]),   # combine before and after mean for Headache
-  Dizziness = c(before[2], after[2]),   # combine before and after mean for Dizziness
-  Nausea = c(before[3], after[3]),   # combine before and after mean for Nausea
-  `Stomach discomfort` = c(before[4], after[4]),   # combine before and after mean for Stomach discomfort
-  `Breathing problems` = c(before[5], after[5]),   # combine before and after mean for Breathing problems
-  Palpitation = c(before[6], after[6]),   # combine before and after mean for Palpitation
-  Itching = c(before[7], after[7]),   # combine before and after mean for Itching
-  `Abnormal sweating` = c(before[8], after[8]),   # combine before and after mean for Abnormal sweating
-  `Dry mouth` = c(before[9], after[9]),   # combine before and after mean for Dry mouth
-  `Chest pain` = c(before[10], after[10])   # combine before and after mean for Chest pain
-)
-
-data <- rbind(   # add two rows at the top for radar chart max and min scale
-  rep(1.8, ncol(data)),   # top row sets the maximum value for each axis
-  rep(1, ncol(data)),   # second row sets the minimum value for each axis
-  data   # actual before and after values
-)
-
-radarchart(   # draw the radar chart
-  data,
-  axistype = 1,   # show axis labels in the default style
-  caxislabels = c("1.0", "1.2", "1.4", "1.6", "1.8"),   # labels for the circular grid levels
-  pcol = c("steelblue", "tomato"),   # line colours for before and after
-  pfcol = c(scales::alpha("steelblue", 0.2), scales::alpha("tomato", 0.2)),   # fill colours with transparency
-  plwd = 1.5,   # line width
-  plty = c(1, 1),   # line type (solid lines)
-  cglcol = "grey70",   # colour of the grid lines
-  axislabcol = "grey30",   # colour of the axis number labels
-  vlcex = 0.8   # size of the symptom labels around the chart
-)
-
-title(
-  main = "Mean symptom scores between each symptom: Before vs After",   # add main title
-  col.main = "black",   # title colour
-  cex.main = 1,   # title size
-  line = 1.5,   # move title a bit away from the plot
-  adj  = 0.5   # centre the title horizontally
-)
-
-legend(
-  "topright",   # place legend at the top right
-  legend = c("Before", "After"),   # legend labels
-  col = c("steelblue", "tomato"),   # legend line colours
-  lty = 1,   # solid line type in legend
-  lwd = 2,   # line width in legend
-  bty = "n"   # remove legend box border
-)
+legend("topright", legend = c("Before", "After"),
+       col = c("steelblue", "tomato"), lty = 1, lwd = 2, bty = "n")
 ```
 
 Figure 2 indicates the mean symptom scores of the groups before and being warned, having an overall increase in their self scorings. With NINSM and NISM having an increase of 0.4-0.6. Showcasing that exposure to others reporting side effects may have increased participants’ own symptom reporting. This reinforces other research which shows that social modelling intensifies nocebo responses by normalising and validating symptom awareness (Colloca & Miller, 2011).
 
+### Mean Difference Score Between Groups (Warned vs Unwarned)
+
 ```{r}
-#| label: chart1
+#| label: fig3
 #| fig-width: 9
 #| fig-height: 6
 
@@ -261,8 +224,7 @@ chart1_data <- df_long |>
   summarise(
     composite_mean_diff = mean(diff, na.rm = TRUE),
     .groups = "drop"
-  ) |>
-  mutate(warned = recode(warned, "Non-warned" = "Unwarned"))
+  )
 
 # --- Plot --------------------------------------------------------------------
 p1 <- ggplot(chart1_data,
@@ -285,141 +247,89 @@ ggplotly(p1)
 
 Figure 3 shows that symptoms are more recognised by the warned group than the unwarned, in general. Specifically noting the NINSM and NISM group having a significant difference in the mean difference score between the warned and unwarned. This suggests that warnings heightened participants’ awareness and sensitivity to possible side effects, especially when paired with social modelling or informational cues. The increase in reported symptoms supports the role of expectancy in amplifying symptom perception (nocebo effect), where negative expectations can increase symptom reporting even without physiological cause (Benedetti, 2013; Colloca & Miller, 2011).
 
+### Mean Score Between Groups by Warned Symptom (Before vs After)
+
 ```{r}
-datapath <- here("data/1901_2026_s1_data.xlsx")   # build the file path to the Excel file
-df <- read_excel(datapath, sheet = "osf_anon_data")   # read the chosen sheet into a data frame
+#| label: fig4
 
-before <- c(   # create a vector of mean "before" warned-symptom scores for each group
-  mean(rowMeans(df[df$group == "NH", c("bgase_1", "bgase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness before for NH
-  mean(rowMeans(df[df$group == "NINSM", c("bgase_1", "bgase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness before for NINSM
-  mean(rowMeans(df[df$group == "NISM", c("bgase_1", "bgase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness before for NISM
-  mean(rowMeans(df[df$group == "INSM", c("bgase_1", "bgase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness before for INSM
-  mean(rowMeans(df[df$group == "ISM", c("bgase_1", "bgase_2")], na.rm = TRUE), na.rm = TRUE)   # mean of Headache and Dizziness before for ISM
-)
+groups     <- c("NH", "NINSM", "NISM", "INSM", "ISM")
+warned_b   <- c("bgase_1", "bgase_2")
+warned_a   <- c("agase_1", "agase_2")
 
-after <- c(   # create a vector of mean "after" warned-symptom scores for each group
-  mean(rowMeans(df[df$group == "NH", c("agase_1", "agase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness after for NH
-  mean(rowMeans(df[df$group == "NINSM", c("agase_1", "agase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness after for NINSM
-  mean(rowMeans(df[df$group == "NISM", c("agase_1", "agase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness after for NISM
-  mean(rowMeans(df[df$group == "INSM", c("agase_1", "agase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness after for INSM
-  mean(rowMeans(df[df$group == "ISM", c("agase_1", "agase_2")], na.rm = TRUE), na.rm = TRUE)   # mean of Headache and Dizziness after for ISM
-)
+before <- sapply(groups, function(g) mean(rowMeans(df[df$group == g, warned_b], na.rm = TRUE), na.rm = TRUE))
+after  <- sapply(groups, function(g) mean(rowMeans(df[df$group == g, warned_a], na.rm = TRUE), na.rm = TRUE))
 
-data <- data.frame(   # make a data frame with one column per group
-  NH = c(before[1], after[1]),   # combine before and after mean for NH
-  NINSM = c(before[2], after[2]),   # combine before and after mean for NINSM
-  NISM = c(before[3], after[3]),   # combine before and after mean for NISM
-  INSM = c(before[4], after[4]),   # combine before and after mean for INSM
-  ISM = c(before[5], after[5])   # combine before and after mean for ISM
-)
+radar_data <- as.data.frame(rbind(before, after))
+names(radar_data) <- groups
 
-data <- rbind(   # add two rows at the top for radar chart max and min scale
-  rep(2, ncol(data)),   # top row sets the maximum value for each axis
-  rep(1, ncol(data)),   # second row sets the minimum value for each axis
-  data   # actual before and after values
+radar_data <- rbind(
+  rep(2, ncol(radar_data)),  # max scale
+  rep(1, ncol(radar_data)),  # min scale
+  radar_data
 )
 
 radarchart(
-  data,   # radar chart input data
-  seg = 5,   # split the axis into 5 segments
-  axistype = 1,   # show axis labels in the default style
-  caxislabels = c("1.0", "1.2", "1.4", "1.6", "1.8", "2.0"),   # labels for the circular grid levels
-  pcol = c("steelblue", "tomato"),   # line colours for before and after
-  pfcol = c(scales::alpha("steelblue", 0.2), scales::alpha("tomato", 0.2)),   # fill colours with transparency
-  plwd = 1.5,   # line width
-  plty = c(1, 1),   # line type (solid lines)
-  cglcol = "grey70",   # colour of the grid lines
-  axislabcol = "grey30",   # colour of the axis number labels
-  vlcex = 0.8   # size of the group labels around the chart
+  radar_data,
+  seg         = 5,
+  axistype    = 1,
+  caxislabels = c("1.0", "1.2", "1.4", "1.6", "1.8", "2.0"),
+  pcol        = c("steelblue", "tomato"),
+  pfcol       = c(scales::alpha("steelblue", 0.2), scales::alpha("tomato", 0.2)),
+  plwd        = 1.5,
+  plty        = c(1, 1),
+  cglcol      = "grey70",
+  axislabcol  = "grey30",
+  vlcex       = 0.8
 )
 
-title(
-  main = "Mean symptom scores across groups: Before vs After (Warned symptoms)",   # add main title
-  col.main = "black",   # title colour
-  cex.main = 1,   # title size
-  line = 1.5   # move title slightly away from the plot
-)
-
-legend(
-  "topright",   # place legend at the top right
-  legend = c("Before", "After"),   # legend labels
-  col = c("steelblue", "tomato"),   # legend line colours
-  lty = 1,   # solid line type in legend
-  lwd = 2,   # line width in legend
-  bty = "n"   # remove legend box border
-)
+legend("topright", legend = c("Before", "After"),
+       col = c("steelblue", "tomato"), lty = 1, lwd = 2, bty = "n")
 ```
 
 Figure 4 shows the mean symptoms of the unwarned group with slight decrease or no change in their symptom scores. The absence of change suggests that physical or environmental factors alone did not influence symptom reporting.
 
+### Mean Score Between Groups by Unwarned Symptom (Before vs After)
+
 ```{r}
-datapath <- here("data/1901_2026_s1_data.xlsx")   # build the file path to the Excel file
-df <- read_excel(datapath, sheet = "osf_anon_data")   # read the chosen sheet into a data frame
+#| label: fig5
 
-before <- c(   # create a vector of mean "before" non-warned-symptom scores for each group
-  mean(rowMeans(df[df$group == "NH",    paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 before for NH
-  mean(rowMeans(df[df$group == "NINSM", paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 before for NINSM
-  mean(rowMeans(df[df$group == "NISM",  paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 before for NISM
-  mean(rowMeans(df[df$group == "INSM",  paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 before for INSM
-  mean(rowMeans(df[df$group == "ISM",   paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE)    # mean of symptoms 3 to 10 before for ISM
-)
+groups       <- c("NH", "NINSM", "NISM", "INSM", "ISM")
+unwarned_b   <- paste0("bgase_", 3:10)
+unwarned_a   <- paste0("agase_", 3:10)
 
-after <- c(   # create a vector of mean "after" non-warned-symptom scores for each group
-  mean(rowMeans(df[df$group == "NH",    paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 after for NH
-  mean(rowMeans(df[df$group == "NINSM", paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 after for NINSM
-  mean(rowMeans(df[df$group == "NISM",  paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 after for NISM
-  mean(rowMeans(df[df$group == "INSM",  paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 after for INSM
-  mean(rowMeans(df[df$group == "ISM",   paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE)    # mean of symptoms 3 to 10 after for ISM
-)
+before <- sapply(groups, function(g) mean(rowMeans(df[df$group == g, unwarned_b], na.rm = TRUE), na.rm = TRUE))
+after  <- sapply(groups, function(g) mean(rowMeans(df[df$group == g, unwarned_a], na.rm = TRUE), na.rm = TRUE))
 
-data <- data.frame(   # make a data frame with one column per group
-  NH = c(before[1], after[1]),         # combine before and after mean for NH
-  NINSM = c(before[2], after[2]),      # combine before and after mean for NINSM
-  NISM = c(before[3], after[3]),       # combine before and after mean for NISM
-  INSM = c(before[4], after[4]),       # combine before and after mean for INSM
-  ISM = c(before[5], after[5])         # combine before and after mean for ISM
-)
+radar_data <- as.data.frame(rbind(before, after))
+names(radar_data) <- groups
 
-data <- rbind(   # add two rows at the top for radar chart max and min scale
-  rep(2, ncol(data)),   # top row sets the maximum value for each axis
-  rep(1, ncol(data)),   # second row sets the minimum value for each axis
-  data                  # actual before and after values
+radar_data <- rbind(
+  rep(2, ncol(radar_data)),  # max scale
+  rep(1, ncol(radar_data)),  # min scale
+  radar_data
 )
 
 radarchart(
-  data,   # radar chart input data
-  seg = 5,   # split each axis into 5 segments
-  axistype = 1,   # show axis labels in the default style
-  caxislabels = c("1.0", "1.2", "1.4", "1.6", "1.8", "2.0"),   # labels for the circular grid levels
-  pcol = c("steelblue", "tomato"),   # line colours for before and after
-  pfcol = c(scales::alpha("steelblue", 0.2), scales::alpha("tomato", 0.2)),   # fill colours with transparency
-  plwd = 1.5,   # line width
-  plty = c(1, 1),   # line type (solid lines)
-  cglcol = "grey70",   # colour of the grid lines
-  axislabcol = "grey30",   # colour of the axis number labels
-  vlcex = 0.8   # size of the group labels around the chart
+  radar_data,
+  seg         = 5,
+  axistype    = 1,
+  caxislabels = c("1.0", "1.2", "1.4", "1.6", "1.8", "2.0"),
+  pcol        = c("steelblue", "tomato"),
+  pfcol       = c(scales::alpha("steelblue", 0.2), scales::alpha("tomato", 0.2)),
+  plwd        = 1.5,
+  plty        = c(1, 1),
+  cglcol      = "grey70",
+  axislabcol  = "grey30",
+  vlcex       = 0.8
 )
 
-title(
-  main = "Mean symptom scores across groups: Before vs After (Non-warned symptoms)",   # add main title
-  col.main = "black",   # title colour
-  cex.main = 1,   # title size
-  line = 1.5   # move title slightly away from the plot
-)
-
-legend(
-  "topright",   # place legend at the top right
-  legend = c("Before", "After"),   # legend labels
-  col = c("steelblue", "tomato"),   # legend line colours
-  lty = 1,   # solid line type in legend
-  lwd = 2,   # line width in legend
-  bty = "n"   # remove legend box border
-)
+legend("topright", legend = c("Before", "After"),
+       col = c("steelblue", "tomato"), lty = 1, lwd = 2, bty = "n")
 ```
 
 Figure 5, showcases the mean symptom scores before and after the experiment, with a sharp rise of dizziness being observed along with a slight increase of headache. Also, having other unwarned symptoms remains constant. Hence, by figure 5 the warned participants have a specific increase in the reporting of those symptoms more than others.
 
-Overall, the consistent increase in warned but not non-warned symptoms demonstrates that expectations strongly influenced symptom experience. Participants were severely influenced by the specific symptoms they anticipated. The findings clearly demonstrate a nocebo effect, however, the study’s limitations may have impacted the results. The sample consisted mainly of psychology students, and data were self-reported, introducing possible bias and limiting generalisability. Despite this, the overall pattern strongly indicates that warning participants about side effects can meaningfully intensify perceived symptom severity.
+Overall, the consistent increase in warned but not unwarned symptoms demonstrates that expectations strongly influenced symptom experience. Participants were severely influenced by the specific symptoms they anticipated. The findings clearly demonstrate a nocebo effect, however, the study’s limitations may have impacted the results. The sample consisted mainly of psychology students, and data were self-reported, introducing possible bias and limiting generalisability. Despite this, the overall pattern strongly indicates that warning participants about side effects can meaningfully intensify perceived symptom severity.
 
 ## Articles
 
@@ -435,15 +345,15 @@ Overall, the consistent increase in warned but not non-warned symptoms demonstra
 
 ## Tools used
 
-+-------------------------------------------+----------------------+
-| **Communication**                         | Instagram            |
-+-------------------------------------------+----------------------+
-| **Writing**                               | Notion, Google Docs  |
-+-------------------------------------------+----------------------+
-| **Editing**                               | Positron             |
-+-------------------------------------------+----------------------+
-| **File management & version** **control** | OneDrive, GitHub     |
-+-------------------------------------------+----------------------+
++-------------------------------------------+---------------------+
+| **Communication**                         | Instagram           |
++-------------------------------------------+---------------------+
+| **Writing**                               | Notion, Google Docs |
++-------------------------------------------+---------------------+
+| **Editing**                               | Positron            |
++-------------------------------------------+---------------------+
+| **File management & version** **control** | OneDrive, GitHub    |
++-------------------------------------------+---------------------+
 
 ## Contributions
 
