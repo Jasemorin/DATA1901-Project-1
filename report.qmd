@@ -175,6 +175,8 @@ Figure 1 shows that there’s a disparity in the recognition of symptoms between
 
 ```{r}
 #| label: fig2
+#| fig-width: 7
+#| fig-height: 7
 
 symptom_names <- c("Headache", "Dizziness", "Nausea", "Stomach discomfort",
                    "Breathing problems", "Palpitation", "Itching",
@@ -251,6 +253,8 @@ Figure 3 shows that symptoms are more recognised by the warned group than the un
 
 ```{r}
 #| label: fig4
+#| fig-width: 7
+#| fig-height: 7
 
 groups     <- c("NH", "NINSM", "NISM", "INSM", "ISM")
 warned_b   <- c("bgase_1", "bgase_2")
@@ -345,15 +349,15 @@ Overall, the consistent increase in warned but not unwarned symptoms demonstrate
 
 ## Tools used
 
-+-------------------------------------------+---------------------+
-| **Communication**                         | Instagram           |
-+-------------------------------------------+---------------------+
-| **Writing**                               | Notion, Google Docs |
-+-------------------------------------------+---------------------+
-| **Editing**                               | Positron            |
-+-------------------------------------------+---------------------+
-| **File management & version** **control** | OneDrive, GitHub    |
-+-------------------------------------------+---------------------+
++-------------------------------------------+-----------------------------------------------+
+| **Communication**                         | Instagram                                     |
++-------------------------------------------+-----------------------------------------------+
+| **Writing**                               | Notion, Google Docs                           |
++-------------------------------------------+-----------------------------------------------+
+| **Editing**                               | Positron                                      |
++-------------------------------------------+-----------------------------------------------+
+| **File management & version** **control** | OneDrive, GitHub                              |
++-------------------------------------------+-----------------------------------------------+
 
 ## Contributions
 
@@ -369,7 +373,13 @@ Overall, the consistent increase in warned but not unwarned symptoms demonstrate
 | **Emily**    | Research question, connection with other articles, presentation slides |
 +--------------+------------------------------------------------------------------------+
 
-[***A short statement explaining how 1 of the Shared Values and 1 of the Ethical Principles has been adhered to.***]{.underline}
+## **Shared Value**
+
+**Truthfulness and Integrity:** Findings were reported impartially, with limitations such as sampling and self-report bias explicitly acknowledged.
+
+## **Ethical Principle**
+
+**Maintaining Confidence in Statistics:** Results were presented with clear context on their reliability, noting the student sample limits generalisability to broader populations.
 
 ## AI Usage
 
