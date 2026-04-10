@@ -152,7 +152,7 @@ p2 <- ggplot(chart2_data, aes(x = fct_reorder(label, item), # order bars by item
   ) +
   labs(
     x       = NULL,                                    # no x-axis title (labels are self-explanatory)
-    y       = "Mean difference score (active − baseline)",
+    y       = "Mean difference score",
     fill    = NULL,                                    # no legend titlela
     caption = "* p < .05  ** p < .001"                # significance key
   ) +
@@ -435,15 +435,15 @@ Overall, the consistent increase in warned but not non-warned symptoms demonstra
 
 ## Tools used
 
-+-------------------------------------------+-----------------------+
-| **Communication**                         | Instagram             |
-+-------------------------------------------+-----------------------+
-| **Writing**                               | Notion, Google Docs   |
-+-------------------------------------------+-----------------------+
-| **Editing**                               | Positron              |
-+-------------------------------------------+-----------------------+
-| **File management & version** **control** | OneDrive, GitHub      |
-+-------------------------------------------+-----------------------+
++-------------------------------------------+----------------------+
+| **Communication**                         | Instagram            |
++-------------------------------------------+----------------------+
+| **Writing**                               | Notion, Google Docs  |
++-------------------------------------------+----------------------+
+| **Editing**                               | Positron             |
++-------------------------------------------+----------------------+
+| **File management & version** **control** | OneDrive, GitHub     |
++-------------------------------------------+----------------------+
 
 ## Contributions
 
