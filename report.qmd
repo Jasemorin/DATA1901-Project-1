@@ -24,6 +24,8 @@ editor: visual
 library(tidyverse)
 library(readxl)
 library(here)
+library(fmsb)
+
 
 #-----Load data--------------------------------------------------------
 datapath <- here("data", "1901_2026_s1_data.xlsx")
@@ -196,11 +198,6 @@ ggplotly(p2)
 Figure 2 shows that there’s a disparity in the recognition of symptoms between the warned and unwarned group, with the warned group having a significant change in their self scoring of headache and dizziness. With the unwarned group having minimal change and a more wide spread of symptoms being recognised. This indicates that warnings directed participants’ attention toward those specific symptoms, showing selective rather than general increases in symptom recognition. The focused symptom amplification aligns with findings by Faasse and Petrie (2013), who found that side-effect warnings alone can heighten symptom experience through expectation (Faasse & Petrie, 2013).
 
 ```{r}
-library(tidyverse)
-library(here)
-library(fmsb)
-library(readxl)
-
 datapath <- here("data/1901_2026_s1_data.xlsx")
 df <- read_excel(datapath, sheet = "osf_anon_data")
 
@@ -283,11 +280,6 @@ legend(
 Figure 3 indicates the mean symptom scores of the groups before and being warned, having an overall increase in their self scorings. With NINSM and NISM having an increase of 0.4-0.6. Showcasing that exposure to others reporting side effects may have increased participants’ own symptom reporting. This reinforces other research which shows that social modelling intensifies nocebo responses by normalising and validating symptom awareness (Colloca & Miller, 2011).
 
 ```{r}
-library(tidyverse)
-library(here)
-library(fmsb)
-library(readxl)
-
 datapath <- here("data/1901_2026_s1_data.xlsx")
 df <- read_excel(datapath, sheet = "osf_anon_data")
 
@@ -355,11 +347,6 @@ legend(
 Figure 4 shows the mean symptoms of the unwarned group with slight decrease or no change in their symptom scores. The absence of change suggests that physical or environmental factors alone did not influence symptom reporting.
 
 ```{r}
-library(tidyverse)
-library(here)
-library(fmsb)
-library(readxl)
-
 datapath <- here("data/1901_2026_s1_data.xlsx")
 df <- read_excel(datapath, sheet = "osf_anon_data")
 
