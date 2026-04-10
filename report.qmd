@@ -1,6 +1,6 @@
 ---
 title: ""
-# subtitle: "One-sentence description of your research question"
+# subtitle: "How do warned symptoms (headache/dizziness) compare to non-warned symptoms?"
 # author: "SIDs 560622278"
 # date: "S1 2026"
 format:
@@ -75,7 +75,7 @@ In this research, we discovered a significant increase in the symptom score for 
 
 # Evidence
 
-## EDA (Max 200 words)
+## EDA
 
 The data was obtained in the survey from the article “Positive social modeling attenuates nocebo side effects”. Our analysis examined the quantitative variable of self rated symptom score (1-7), and a combination of qualitative data on symptom types, different groups(ISM, NISM, NINSM, NH, INSM) either warned or non-warned.
 
@@ -428,7 +428,7 @@ Figure 5, showcases the mean symptom scores before and after the experiment, wit
 
 Overall, the consistent increase in warned but not non-warned symptoms demonstrates that expectations strongly influenced symptom experience. Participants were severely influenced by the specific symptoms they anticipated. The findings clearly demonstrate a nocebo effect, however, the study’s limitations may have impacted the results. The sample consisted mainly of psychology students, and data were self-reported, introducing possible bias and limiting generalisability. Despite this, the overall pattern strongly indicates that warning participants about side effects can meaningfully intensify perceived symptom severity.
 
-## Articles (Max 50 words)
+## Articles
 
 ### **References**
 
@@ -442,13 +442,13 @@ Overall, the consistent increase in warned but not non-warned symptoms demonstra
 
 ## Tools used
 
-Communication: Instagram
+**Communication**: Instagram
 
-Writing: Notion, Google Docs
+**Writing**: Notion, Google Docs
 
-Editing: Positron
+**Editing**: Positron
 
-File management & version control: OneDrive, GitHub
+**File management & version** control: OneDrive, GitHub
 
 ## Contributions
 
@@ -467,3 +467,5 @@ File management & version control: OneDrive, GitHub
 ## AI Usage
 
 Claude Opus 4.6, published by Anthropic (<https://claude.ai/>), was used to assist with coding.
+
+ChatGPT-5.3, published by Open AI (<https://chatgpt.com/),> was used to assist with understanding bias and reliability relationships.
