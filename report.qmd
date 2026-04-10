@@ -204,216 +204,216 @@ ggplotly(p2)
 Figure 2 shows that there’s a disparity in the recognition of symptoms between the warned and unwarned group, with the warned group having a significant change in their self scoring of headache and dizziness. With the unwarned group having minimal change and a more wide spread of symptoms being recognised. This indicates that warnings directed participants’ attention toward those specific symptoms, showing selective rather than general increases in symptom recognition. The focused symptom amplification aligns with findings by Faasse and Petrie (2013), who found that side-effect warnings alone can heighten symptom experience through expectation (Faasse & Petrie, 2013).
 
 ```{r}
-datapath <- here("data/1901_2026_s1_data.xlsx")
-df <- read_excel(datapath, sheet = "osf_anon_data")
+datapath <- here("data/1901_2026_s1_data.xlsx")   # build the file path to the Excel file
+df <- read_excel(datapath, sheet = "osf_anon_data")   # read the chosen sheet into a data frame
 
-before <- c(
-  mean(df$bgase_1, na.rm = TRUE),
-  mean(df$bgase_2, na.rm = TRUE),
-  mean(df$bgase_3, na.rm = TRUE),
-  mean(df$bgase_4, na.rm = TRUE),
-  mean(df$bgase_5, na.rm = TRUE),
-  mean(df$bgase_6, na.rm = TRUE),
-  mean(df$bgase_7, na.rm = TRUE),
-  mean(df$bgase_8, na.rm = TRUE),
-  mean(df$bgase_9, na.rm = TRUE),
-  mean(df$bgase_10, na.rm = TRUE)
+before <- c(   # create a vector of mean "before" scores for the 10 symptoms
+  mean(df$bgase_1, na.rm = TRUE),   # mean of symptom 1 before, ignore missing values
+  mean(df$bgase_2, na.rm = TRUE),   # mean of symptom 2 before
+  mean(df$bgase_3, na.rm = TRUE),   # mean of symptom 3 before
+  mean(df$bgase_4, na.rm = TRUE),   # mean of symptom 4 before
+  mean(df$bgase_5, na.rm = TRUE),   # mean of symptom 5 before
+  mean(df$bgase_6, na.rm = TRUE),   # mean of symptom 6 before
+  mean(df$bgase_7, na.rm = TRUE),   # mean of symptom 7 before
+  mean(df$bgase_8, na.rm = TRUE),   # mean of symptom 8 before
+  mean(df$bgase_9, na.rm = TRUE),   # mean of symptom 9 before
+  mean(df$bgase_10, na.rm = TRUE)   # mean of symptom 10 before
 )
 
-after <- c(
-  mean(df$agase_1, na.rm = TRUE),
-  mean(df$agase_2, na.rm = TRUE),
-  mean(df$agase_3, na.rm = TRUE),
-  mean(df$agase_4, na.rm = TRUE),
-  mean(df$agase_5, na.rm = TRUE),
-  mean(df$agase_6, na.rm = TRUE),
-  mean(df$agase_7, na.rm = TRUE),
-  mean(df$agase_8, na.rm = TRUE),
-  mean(df$agase_9, na.rm = TRUE),
-  mean(df$agase_10, na.rm = TRUE)
+after <- c(   # create a vector of mean "after" scores for the 10 symptoms
+  mean(df$agase_1, na.rm = TRUE),   # mean of symptom 1 after, ignore missing values
+  mean(df$agase_2, na.rm = TRUE),   # mean of symptom 2 after
+  mean(df$agase_3, na.rm = TRUE),   # mean of symptom 3 after
+  mean(df$agase_4, na.rm = TRUE),   # mean of symptom 4 after
+  mean(df$agase_5, na.rm = TRUE),   # mean of symptom 5 after
+  mean(df$agase_6, na.rm = TRUE),   # mean of symptom 6 after
+  mean(df$agase_7, na.rm = TRUE),   # mean of symptom 7 after
+  mean(df$agase_8, na.rm = TRUE),   # mean of symptom 8 after
+  mean(df$agase_9, na.rm = TRUE),   # mean of symptom 9 after
+  mean(df$agase_10, na.rm = TRUE)   # mean of symptom 10 after
 )
 
-data <- data.frame(
-  Headache = c(before[1], after[1]),
-  Dizziness = c(before[2], after[2]),
-  Nausea = c(before[3], after[3]),
-  `Stomach discomfort` = c(before[4], after[4]),
-  `Breathing problems` = c(before[5], after[5]),
-  Palpitation = c(before[6], after[6]),
-  Itching = c(before[7], after[7]),
-  `Abnormal sweating` = c(before[8], after[8]),
-  `Dry mouth` = c(before[9], after[9]),
-  `Chest pain` = c(before[10], after[10])
+data <- data.frame(   # make a data frame with one column per symptom
+  Headache = c(before[1], after[1]),   # combine before and after mean for Headache
+  Dizziness = c(before[2], after[2]),   # combine before and after mean for Dizziness
+  Nausea = c(before[3], after[3]),   # combine before and after mean for Nausea
+  `Stomach discomfort` = c(before[4], after[4]),   # combine before and after mean for Stomach discomfort
+  `Breathing problems` = c(before[5], after[5]),   # combine before and after mean for Breathing problems
+  Palpitation = c(before[6], after[6]),   # combine before and after mean for Palpitation
+  Itching = c(before[7], after[7]),   # combine before and after mean for Itching
+  `Abnormal sweating` = c(before[8], after[8]),   # combine before and after mean for Abnormal sweating
+  `Dry mouth` = c(before[9], after[9]),   # combine before and after mean for Dry mouth
+  `Chest pain` = c(before[10], after[10])   # combine before and after mean for Chest pain
 )
 
-data <- rbind(
-  rep(1.8, ncol(data)),
-  rep(1, ncol(data)),
-  data
+data <- rbind(   # add two rows at the top for radar chart max and min scale
+  rep(1.8, ncol(data)),   # top row sets the maximum value for each axis
+  rep(1, ncol(data)),   # second row sets the minimum value for each axis
+  data   # actual before and after values
 )
 
-radarchart(
+radarchart(   # draw the radar chart
   data,
-  axistype = 1,
-  caxislabels = c("1.0", "1.2", "1.4", "1.6", "1.8"),
-  pcol = c("steelblue", "tomato"),
-  pfcol = c(scales::alpha("steelblue", 0.2), scales::alpha("tomato", 0.2)),
-  plwd = 1.5,
-  plty = c(1, 1),
-  cglcol = "grey70",
-  axislabcol = "grey30",
-  vlcex = 0.8
+  axistype = 1,   # show axis labels in the default style
+  caxislabels = c("1.0", "1.2", "1.4", "1.6", "1.8"),   # labels for the circular grid levels
+  pcol = c("steelblue", "tomato"),   # line colours for before and after
+  pfcol = c(scales::alpha("steelblue", 0.2), scales::alpha("tomato", 0.2)),   # fill colours with transparency
+  plwd = 1.5,   # line width
+  plty = c(1, 1),   # line type (solid lines)
+  cglcol = "grey70",   # colour of the grid lines
+  axislabcol = "grey30",   # colour of the axis number labels
+  vlcex = 0.8   # size of the symptom labels around the chart
 )
 
 title(
-    main = "Mean symptom scores between each symptom: Before vs After",
-    col.main = "black",
-    cex.main = 1,
-    line = 1.5,
-    adj  = 0.5   # centre the title horizontally
+  main = "Mean symptom scores between each symptom: Before vs After",   # add main title
+  col.main = "black",   # title colour
+  cex.main = 1,   # title size
+  line = 1.5,   # move title a bit away from the plot
+  adj  = 0.5   # centre the title horizontally
 )
 
 legend(
-  "topright",
-  legend = c("Before", "After"),
-  col = c("steelblue", "tomato"),
-  lty = 1,
-  lwd = 2,
-  bty = "n"
+  "topright",   # place legend at the top right
+  legend = c("Before", "After"),   # legend labels
+  col = c("steelblue", "tomato"),   # legend line colours
+  lty = 1,   # solid line type in legend
+  lwd = 2,   # line width in legend
+  bty = "n"   # remove legend box border
 )
 ```
 
 Figure 3 indicates the mean symptom scores of the groups before and being warned, having an overall increase in their self scorings. With NINSM and NISM having an increase of 0.4-0.6. Showcasing that exposure to others reporting side effects may have increased participants’ own symptom reporting. This reinforces other research which shows that social modelling intensifies nocebo responses by normalising and validating symptom awareness (Colloca & Miller, 2011).
 
 ```{r}
-datapath <- here("data/1901_2026_s1_data.xlsx")
-df <- read_excel(datapath, sheet = "osf_anon_data")
+datapath <- here("data/1901_2026_s1_data.xlsx")   # build the file path to the Excel file
+df <- read_excel(datapath, sheet = "osf_anon_data")   # read the chosen sheet into a data frame
 
-before <- c(
-    mean(rowMeans(df[df$group == "NH", c("bgase_1", "bgase_2")],na.rm = TRUE),na.rm = TRUE),
-    mean(rowMeans(df[df$group == "NINSM", c("bgase_1", "bgase_2")],na.rm = TRUE),na.rm = TRUE),
-    mean(rowMeans(df[df$group == "NISM", c("bgase_1", "bgase_2")],na.rm = TRUE),na.rm = TRUE),
-    mean(rowMeans(df[df$group == "INSM", c("bgase_1", "bgase_2")],na.rm = TRUE),na.rm = TRUE),
-    mean(rowMeans(df[df$group == "ISM", c("bgase_1", "bgase_2")],na.rm = TRUE),na.rm = TRUE)
+before <- c(   # create a vector of mean "before" warned-symptom scores for each group
+  mean(rowMeans(df[df$group == "NH", c("bgase_1", "bgase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness before for NH
+  mean(rowMeans(df[df$group == "NINSM", c("bgase_1", "bgase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness before for NINSM
+  mean(rowMeans(df[df$group == "NISM", c("bgase_1", "bgase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness before for NISM
+  mean(rowMeans(df[df$group == "INSM", c("bgase_1", "bgase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness before for INSM
+  mean(rowMeans(df[df$group == "ISM", c("bgase_1", "bgase_2")], na.rm = TRUE), na.rm = TRUE)   # mean of Headache and Dizziness before for ISM
 )
 
-after <- c(
-  mean(rowMeans(df[df$group == "NH", c("agase_1", "agase_2")],na.rm = TRUE),na.rm = TRUE),
-    mean(rowMeans(df[df$group == "NINSM", c("agase_1", "agase_2")],na.rm = TRUE),na.rm = TRUE),
-    mean(rowMeans(df[df$group == "NISM", c("agase_1", "agase_2")],na.rm = TRUE),na.rm = TRUE),
-    mean(rowMeans(df[df$group == "INSM", c("agase_1", "agase_2")],na.rm = TRUE),na.rm = TRUE),
-    mean(rowMeans(df[df$group == "ISM", c("agase_1", "agase_2")],na.rm = TRUE),na.rm = TRUE)
+after <- c(   # create a vector of mean "after" warned-symptom scores for each group
+  mean(rowMeans(df[df$group == "NH", c("agase_1", "agase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness after for NH
+  mean(rowMeans(df[df$group == "NINSM", c("agase_1", "agase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness after for NINSM
+  mean(rowMeans(df[df$group == "NISM", c("agase_1", "agase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness after for NISM
+  mean(rowMeans(df[df$group == "INSM", c("agase_1", "agase_2")], na.rm = TRUE), na.rm = TRUE),   # mean of Headache and Dizziness after for INSM
+  mean(rowMeans(df[df$group == "ISM", c("agase_1", "agase_2")], na.rm = TRUE), na.rm = TRUE)   # mean of Headache and Dizziness after for ISM
 )
 
-data <- data.frame(
-  NH = c(before[1], after[1]),
-  NINSM = c(before[2], after[2]),
-  NISM = c(before[3], after[3]),
-  INSM = c(before[4], after[4]),
-  ISM = c(before[5], after[5])
+data <- data.frame(   # make a data frame with one column per group
+  NH = c(before[1], after[1]),   # combine before and after mean for NH
+  NINSM = c(before[2], after[2]),   # combine before and after mean for NINSM
+  NISM = c(before[3], after[3]),   # combine before and after mean for NISM
+  INSM = c(before[4], after[4]),   # combine before and after mean for INSM
+  ISM = c(before[5], after[5])   # combine before and after mean for ISM
 )
 
-data <- rbind(
-  rep(2, ncol(data)),
-  rep(1, ncol(data)),
-  data
+data <- rbind(   # add two rows at the top for radar chart max and min scale
+  rep(2, ncol(data)),   # top row sets the maximum value for each axis
+  rep(1, ncol(data)),   # second row sets the minimum value for each axis
+  data   # actual before and after values
 )
 
 radarchart(
-  data,
-  seg = 5,
-  axistype = 1,
-  caxislabels = c("1.0", "1.2", "1.4", "1.6", "1.8", "2.0"),
-  pcol = c("steelblue", "tomato"),
-  pfcol = c(scales::alpha("steelblue", 0.2), scales::alpha("tomato", 0.2)),
-  plwd = 1.5,
-  plty = c(1, 1),
-  cglcol = "grey70",
-  axislabcol = "grey30",
-  vlcex = 0.8
+  data,   # radar chart input data
+  seg = 5,   # split the axis into 5 segments
+  axistype = 1,   # show axis labels in the default style
+  caxislabels = c("1.0", "1.2", "1.4", "1.6", "1.8", "2.0"),   # labels for the circular grid levels
+  pcol = c("steelblue", "tomato"),   # line colours for before and after
+  pfcol = c(scales::alpha("steelblue", 0.2), scales::alpha("tomato", 0.2)),   # fill colours with transparency
+  plwd = 1.5,   # line width
+  plty = c(1, 1),   # line type (solid lines)
+  cglcol = "grey70",   # colour of the grid lines
+  axislabcol = "grey30",   # colour of the axis number labels
+  vlcex = 0.8   # size of the group labels around the chart
 )
 
 title(
-    main = "Mean symptom scores between groups: Before vs After (Warned symptom)",
-    col.main = "black",
-    cex.main = 1,
-    line = 1.5
+  main = "Mean symptom scores across groups: Before vs After (Warned symptoms)",   # add main title
+  col.main = "black",   # title colour
+  cex.main = 1,   # title size
+  line = 1.5   # move title slightly away from the plot
 )
 
 legend(
-  "topright",
-  legend = c("Before", "After"),
-  col = c("steelblue", "tomato"),
-  lty = 1,
-  lwd = 2,
-  bty = "n"
+  "topright",   # place legend at the top right
+  legend = c("Before", "After"),   # legend labels
+  col = c("steelblue", "tomato"),   # legend line colours
+  lty = 1,   # solid line type in legend
+  lwd = 2,   # line width in legend
+  bty = "n"   # remove legend box border
 )
 ```
 
 Figure 4 shows the mean symptoms of the unwarned group with slight decrease or no change in their symptom scores. The absence of change suggests that physical or environmental factors alone did not influence symptom reporting.
 
 ```{r}
-datapath <- here("data/1901_2026_s1_data.xlsx")
-df <- read_excel(datapath, sheet = "osf_anon_data")
+datapath <- here("data/1901_2026_s1_data.xlsx")   # build the file path to the Excel file
+df <- read_excel(datapath, sheet = "osf_anon_data")   # read the chosen sheet into a data frame
 
-before <- c(
-  mean(rowMeans(df[df$group == "NH",    paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
-  mean(rowMeans(df[df$group == "NINSM", paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
-  mean(rowMeans(df[df$group == "NISM",  paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
-  mean(rowMeans(df[df$group == "INSM",  paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
-  mean(rowMeans(df[df$group == "ISM",   paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE)
+before <- c(   # create a vector of mean "before" non-warned-symptom scores for each group
+  mean(rowMeans(df[df$group == "NH",    paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 before for NH
+  mean(rowMeans(df[df$group == "NINSM", paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 before for NINSM
+  mean(rowMeans(df[df$group == "NISM",  paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 before for NISM
+  mean(rowMeans(df[df$group == "INSM",  paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 before for INSM
+  mean(rowMeans(df[df$group == "ISM",   paste0("bgase_", 3:10)], na.rm = TRUE), na.rm = TRUE)    # mean of symptoms 3 to 10 before for ISM
 )
 
-after <- c(
-  mean(rowMeans(df[df$group == "NH",    paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
-  mean(rowMeans(df[df$group == "NINSM", paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
-  mean(rowMeans(df[df$group == "NISM",  paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
-  mean(rowMeans(df[df$group == "INSM",  paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),
-  mean(rowMeans(df[df$group == "ISM",   paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE)
+after <- c(   # create a vector of mean "after" non-warned-symptom scores for each group
+  mean(rowMeans(df[df$group == "NH",    paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 after for NH
+  mean(rowMeans(df[df$group == "NINSM", paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 after for NINSM
+  mean(rowMeans(df[df$group == "NISM",  paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 after for NISM
+  mean(rowMeans(df[df$group == "INSM",  paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE),   # mean of symptoms 3 to 10 after for INSM
+  mean(rowMeans(df[df$group == "ISM",   paste0("agase_", 3:10)], na.rm = TRUE), na.rm = TRUE)    # mean of symptoms 3 to 10 after for ISM
 )
 
-data <- data.frame(
-  NH = c(before[1], after[1]),
-  NINSM = c(before[2], after[2]),
-  NISM = c(before[3], after[3]),
-  INSM = c(before[4], after[4]),
-  ISM = c(before[5], after[5])
+data <- data.frame(   # make a data frame with one column per group
+  NH = c(before[1], after[1]),         # combine before and after mean for NH
+  NINSM = c(before[2], after[2]),      # combine before and after mean for NINSM
+  NISM = c(before[3], after[3]),       # combine before and after mean for NISM
+  INSM = c(before[4], after[4]),       # combine before and after mean for INSM
+  ISM = c(before[5], after[5])         # combine before and after mean for ISM
 )
 
-data <- rbind(
-  rep(2, ncol(data)),
-  rep(1, ncol(data)),
-  data
+data <- rbind(   # add two rows at the top for radar chart max and min scale
+  rep(2, ncol(data)),   # top row sets the maximum value for each axis
+  rep(1, ncol(data)),   # second row sets the minimum value for each axis
+  data                  # actual before and after values
 )
 
 radarchart(
-  data,
-  seg = 5,
-  axistype = 1,
-  caxislabels = c("1.0", "1.2", "1.4", "1.6", "1.8", "2.0"),
-  pcol = c("steelblue", "tomato"),
-  pfcol = c(scales::alpha("steelblue", 0.2), scales::alpha("tomato", 0.2)),
-  plwd = 1.5,
-  plty = c(1, 1),
-  cglcol = "grey70",
-  axislabcol = "grey30",
-  vlcex = 0.8
+  data,   # radar chart input data
+  seg = 5,   # split each axis into 5 segments
+  axistype = 1,   # show axis labels in the default style
+  caxislabels = c("1.0", "1.2", "1.4", "1.6", "1.8", "2.0"),   # labels for the circular grid levels
+  pcol = c("steelblue", "tomato"),   # line colours for before and after
+  pfcol = c(scales::alpha("steelblue", 0.2), scales::alpha("tomato", 0.2)),   # fill colours with transparency
+  plwd = 1.5,   # line width
+  plty = c(1, 1),   # line type (solid lines)
+  cglcol = "grey70",   # colour of the grid lines
+  axislabcol = "grey30",   # colour of the axis number labels
+  vlcex = 0.8   # size of the group labels around the chart
 )
 
 title(
-    main = "Mean symptom scores between groups: Before vs After (Non-warned symptom)",
-    col.main = "black",
-    cex.main = 1,
-    line = 1.5
+  main = "Mean symptom scores across groups: Before vs After (Non-warned symptoms)",   # add main title
+  col.main = "black",   # title colour
+  cex.main = 1,   # title size
+  line = 1.5   # move title slightly away from the plot
 )
 
 legend(
-  "topright",
-  legend = c("Before", "After"),
-  col = c("steelblue", "tomato"),
-  lty = 1,
-  lwd = 2,
-  bty = "n"
+  "topright",   # place legend at the top right
+  legend = c("Before", "After"),   # legend labels
+  col = c("steelblue", "tomato"),   # legend line colours
+  lty = 1,   # solid line type in legend
+  lwd = 2,   # line width in legend
+  bty = "n"   # remove legend box border
 )
 ```
 
@@ -435,15 +435,15 @@ Overall, the consistent increase in warned but not non-warned symptoms demonstra
 
 ## Tools used
 
-+-------------------------------------------+----------------------------+
-| **Communication**                         | Instagram                  |
-+-------------------------------------------+----------------------------+
-| **Writing**                               | Notion, Google Docs        |
-+-------------------------------------------+----------------------------+
-| **Editing**                               | Positron                   |
-+-------------------------------------------+----------------------------+
-| **File management & version** **control** | OneDrive, GitHub           |
-+-------------------------------------------+----------------------------+
++-------------------------------------------+-------------------------+
+| **Communication**                         | Instagram               |
++-------------------------------------------+-------------------------+
+| **Writing**                               | Notion, Google Docs     |
++-------------------------------------------+-------------------------+
+| **Editing**                               | Positron                |
++-------------------------------------------+-------------------------+
+| **File management & version** **control** | OneDrive, GitHub        |
++-------------------------------------------+-------------------------+
 
 ## Contributions
 
