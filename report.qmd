@@ -25,6 +25,7 @@ library(tidyverse)
 library(readxl)
 library(here)
 library(fmsb)
+library(plotly)
 
 
 #-----Load data--------------------------------------------------------
@@ -118,42 +119,6 @@ How do warned symptoms (headache/dizziness) compare to non-warned symptoms?
 :::
 
 ```{r}
-#| label: chart1
-#| fig-width: 9
-#| fig-height: 6
-library(plotly)
-
-# --- Summarise: composite mean diff per group × warned status ----------------
-chart1_data <- df_long |>
-  group_by(group, warned) |>
-  summarise(
-    composite_mean_diff = mean(diff, na.rm = TRUE),
-    .groups = "drop"
-  ) |>
-  mutate(warned = recode(warned, "Non-warned" = "Unwarned"))
-
-# --- Plot --------------------------------------------------------------------
-p1 <- ggplot(chart1_data,
-       aes(x = group, y = composite_mean_diff, fill = warned)) +
-  geom_col(position = position_dodge(width = 0.7), width = 0.6) +
-  geom_hline(yintercept = 0, colour = "grey40", linewidth = 0.4) +
-  scale_fill_manual(
-    values = c("Warned" = "#D85A30", "Unwarned" = "#5DCAA5")
-  ) +
-  labs(
-    y     = "Composite mean difference score",
-    x     = NULL,
-    fill  = NULL
-  ) +
-  theme_minimal(base_size = 12) +
-  theme(legend.position = "top")
-
-ggplotly(p1)
-```
-
-Figure 1 shows that symptoms are more recognised by the warned group than the unwarned, in general. Specifically noting the NINSM and NISM group having a significant difference in the mean difference score between the warned and unwarned. This suggests that warnings heightened participants’ awareness and sensitivity to possible side effects, especially when paired with social modelling or informational cues. The increase in reported symptoms supports the role of expectancy in amplifying symptom perception (nocebo effect), where negative expectations can increase symptom reporting even without physiological cause (Benedetti, 2013; Colloca & Miller, 2011).
-
-```{r}
 #| label: chart2
 #| fig-width: 9
 #| fig-height: 6
@@ -201,7 +166,7 @@ p2 <- ggplot(chart2_data, aes(x = fct_reorder(label, item), # order bars by item
 ggplotly(p2)
 ```
 
-Figure 2 shows that there’s a disparity in the recognition of symptoms between the warned and unwarned group, with the warned group having a significant change in their self scoring of headache and dizziness. With the unwarned group having minimal change and a more wide spread of symptoms being recognised. This indicates that warnings directed participants’ attention toward those specific symptoms, showing selective rather than general increases in symptom recognition. The focused symptom amplification aligns with findings by Faasse and Petrie (2013), who found that side-effect warnings alone can heighten symptom experience through expectation (Faasse & Petrie, 2013).
+Figure 1 shows that there’s a disparity in the recognition of symptoms between the warned and unwarned group, with the warned group having a significant change in their self scoring of headache and dizziness. With the unwarned group having minimal change and a more wide spread of symptoms being recognised. This indicates that warnings directed participants’ attention toward those specific symptoms, showing selective rather than general increases in symptom recognition. The focused symptom amplification aligns with findings by Faasse and Petrie (2013), who found that side-effect warnings alone can heighten symptom experience through expectation (Faasse & Petrie, 2013).
 
 ```{r}
 datapath <- here("data/1901_2026_s1_data.xlsx")   # build the file path to the Excel file
@@ -283,7 +248,42 @@ legend(
 )
 ```
 
-Figure 3 indicates the mean symptom scores of the groups before and being warned, having an overall increase in their self scorings. With NINSM and NISM having an increase of 0.4-0.6. Showcasing that exposure to others reporting side effects may have increased participants’ own symptom reporting. This reinforces other research which shows that social modelling intensifies nocebo responses by normalising and validating symptom awareness (Colloca & Miller, 2011).
+Figure 2 indicates the mean symptom scores of the groups before and being warned, having an overall increase in their self scorings. With NINSM and NISM having an increase of 0.4-0.6. Showcasing that exposure to others reporting side effects may have increased participants’ own symptom reporting. This reinforces other research which shows that social modelling intensifies nocebo responses by normalising and validating symptom awareness (Colloca & Miller, 2011).
+
+```{r}
+#| label: chart1
+#| fig-width: 9
+#| fig-height: 6
+
+# --- Summarise: composite mean diff per group × warned status ----------------
+chart1_data <- df_long |>
+  group_by(group, warned) |>
+  summarise(
+    composite_mean_diff = mean(diff, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  mutate(warned = recode(warned, "Non-warned" = "Unwarned"))
+
+# --- Plot --------------------------------------------------------------------
+p1 <- ggplot(chart1_data,
+       aes(x = group, y = composite_mean_diff, fill = warned)) +
+  geom_col(position = position_dodge(width = 0.7), width = 0.6) +
+  geom_hline(yintercept = 0, colour = "grey40", linewidth = 0.4) +
+  scale_fill_manual(
+    values = c("Warned" = "#D85A30", "Unwarned" = "#5DCAA5")
+  ) +
+  labs(
+    y     = "Composite mean difference score",
+    x     = NULL,
+    fill  = NULL
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "top")
+
+ggplotly(p1)
+```
+
+Figure 3 shows that symptoms are more recognised by the warned group than the unwarned, in general. Specifically noting the NINSM and NISM group having a significant difference in the mean difference score between the warned and unwarned. This suggests that warnings heightened participants’ awareness and sensitivity to possible side effects, especially when paired with social modelling or informational cues. The increase in reported symptoms supports the role of expectancy in amplifying symptom perception (nocebo effect), where negative expectations can increase symptom reporting even without physiological cause (Benedetti, 2013; Colloca & Miller, 2011).
 
 ```{r}
 datapath <- here("data/1901_2026_s1_data.xlsx")   # build the file path to the Excel file
@@ -435,15 +435,15 @@ Overall, the consistent increase in warned but not non-warned symptoms demonstra
 
 ## Tools used
 
-+-------------------------------------------+-------------------------+
-| **Communication**                         | Instagram               |
-+-------------------------------------------+-------------------------+
-| **Writing**                               | Notion, Google Docs     |
-+-------------------------------------------+-------------------------+
-| **Editing**                               | Positron                |
-+-------------------------------------------+-------------------------+
-| **File management & version** **control** | OneDrive, GitHub        |
-+-------------------------------------------+-------------------------+
++-------------------------------------------+-----------------------+
+| **Communication**                         | Instagram             |
++-------------------------------------------+-----------------------+
+| **Writing**                               | Notion, Google Docs   |
++-------------------------------------------+-----------------------+
+| **Editing**                               | Positron              |
++-------------------------------------------+-----------------------+
+| **File management & version** **control** | OneDrive, GitHub      |
++-------------------------------------------+-----------------------+
 
 ## Contributions
 
