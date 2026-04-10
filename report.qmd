@@ -77,9 +77,15 @@ In this research, we discovered a significant increase in the symptom score for 
 
 # Evidence
 
-## EDA
+## Exploratory Data Analysis (EDA)
 
-The data was obtained in the survey from the article “Positive social modeling attenuates nocebo side effects”. Our analysis examined the quantitative variable of self rated symptom score (1-7), and a combination of qualitative data on symptom types, different groups(ISM, NISM, NINSM, NH, INSM) either warned or non-warned.
+The data was obtained in the survey from the article “Positive social modeling attenuates nocebo side effects”. Our analysis examined the quantitative variable of self rated symptom score (1-7), and a combination of qualitative data on symptom types, different groups(NH, ISM, NISM, INSM, NINSM) either warned or non-warned.
+
+*NH: Natural History\
+ISM: Instruction & Side-effect Modelling\
+NISM: No Instruction & Side-effect Modelling\
+INSM: Instruction & No Side-effect Modelling\
+NINSM: Instruction & No Side-effect Modelling*
 
 ### Limitations
 
@@ -429,15 +435,15 @@ Overall, the consistent increase in warned but not non-warned symptoms demonstra
 
 ## Tools used
 
-+-------------------------------------------+-----------------------------------+
-| **Communication**                         | Instagram                         |
-+-------------------------------------------+-----------------------------------+
-| **Writing**                               | Notion, Google Docs               |
-+-------------------------------------------+-----------------------------------+
-| **Editing**                               | Positron                          |
-+-------------------------------------------+-----------------------------------+
-| **File management & version** **control** | OneDrive, GitHub                  |
-+-------------------------------------------+-----------------------------------+
++-------------------------------------------+-----------------------------+
+| **Communication**                         | Instagram                   |
++-------------------------------------------+-----------------------------+
+| **Writing**                               | Notion, Google Docs         |
++-------------------------------------------+-----------------------------+
+| **Editing**                               | Positron                    |
++-------------------------------------------+-----------------------------+
+| **File management & version** **control** | OneDrive, GitHub            |
++-------------------------------------------+-----------------------------+
 
 ## Contributions
 
